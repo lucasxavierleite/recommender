@@ -3,7 +3,8 @@
 
 typedef struct grafo GRAFO;
 
-void ler_arquivo_filme(FILE *arquivo);
-void ler_arquivo(FILE *arquivo);
+GRAFO *grafo_criar(FILE *arquivo);
+void grafo_liberar(GRAFO *grafo);
+void grafo_imprimir_filmes(GRAFO *grafo);
 
 #endif

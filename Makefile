@@ -1,5 +1,9 @@
 all:
-	gcc grafo.c main.c -g -o main
+	gcc aux.c filme.c grafo.c recommender.c -g -o recommender
 
 run:
-	./main
+	./recommender filmes.txt
+
+valgrind:
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -v ./main
+
