@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include "grafo.h"
 #include "aux.h"
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 int main(int argc, char *argv[]) {
 	FILE *arquivo = fopen(argv[1], "r");
@@ -11,7 +14,11 @@ int main(int argc, char *argv[]) {
 	}
 
 	GRAFO *grafo = grafo_criar(arquivo);
-	grafo_imprimir_filmes(grafo);
+	
+	char nome_filme[255];
+	scanf("%[^\n]", nome_filme);
+
+	grafo_recomendar(grafo, nome_filme);
 	grafo_liberar(grafo);
 
 	fclose(arquivo);

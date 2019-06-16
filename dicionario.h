@@ -1,0 +1,14 @@
+#ifndef DICIONARIO_H
+#define DICIONARIO_H
+
+typedef struct dicionario DICIONARIO;
+
+char** dicionario_para_vetor(DICIONARIO* d);
+char *dicionario_buscar_pos(DICIONARIO *d, int i);
+DICIONARIO* dicionario_criar();
+void dicionario_inserir(DICIONARIO* d, char* nome);
+char *dicionario_buscar_pos(DICIONARIO *d, int i);
+int dicionario_numero_palavras(DICIONARIO* d);
+
+
+#endif
