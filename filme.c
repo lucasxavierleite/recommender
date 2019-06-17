@@ -10,10 +10,10 @@
 
 struct filme {
 	char *nome;
-	unsigned int n_generos;
+	unsigned n_generos;
 	char **generos;
 	char *sinopse;
-	unsigned int ano;
+	unsigned ano;
 };
 
 FILME *filme_criar(char *nome, int ano, char *generos, char *sinopse) {
@@ -30,7 +30,7 @@ FILME *filme_criar(char *nome, int ano, char *generos, char *sinopse) {
 	while((token)) {
 		filme->generos = (char **) realloc(filme->generos, i + 1);
 		filme->generos[i] = (char *) malloc(strlen(token) + 1);
-		trim(token);
+		// trim(token);
 		strcpy(filme->generos[i], token);
 		token = strtok(NULL, ",\n");
 		i++;
@@ -45,7 +45,7 @@ FILME *filme_criar(char *nome, int ano, char *generos, char *sinopse) {
 	return filme;
 }
 
-FILME *filme_ler_arquivo(FILE *arquivo, DICIONARIO* dicionario_sinopse) {
+FILME *filme_ler_arquivo(FILE *arquivo, DICIONARIO *dicionario_sinopse) {
 	char lixo[50];
 	char nome[100];
 	int ano;
@@ -57,30 +57,29 @@ FILME *filme_ler_arquivo(FILE *arquivo, DICIONARIO* dicionario_sinopse) {
 	fscanf(arquivo, "%s %[^\n]", lixo, generos);
 	fscanf(arquivo, "%s %[^\n] ", lixo, sinopse);
 
-	char** v = NULL;
 	int nv = 0;
 	char sinopse_cp[strlen(sinopse)];
 	strcpy(sinopse_cp, sinopse);
 	
-	tokenize(sinopse_cp, v, &nv, NAO_ALFA); 
-	for(int i = 0; i < nv; i++){
+	char **v = tokenize(sinopse_cp, &nv, NAO_ALFA);
+
+	for(int i = 0; i < nv; i++) {
 		dicionario_inserir(dicionario_sinopse, v[i]);
 	}
 
 	return filme_criar(nome, ano, generos, sinopse);
 }
 
-double filme_calcula_peso_nome(FILME* f1, FILME* f2) {
-	char **v1 = NULL, **v2 = NULL; /* vetorES de strings */
+double filme_calcula_peso_nome(FILME *f1, FILME *f2) {	
 	int c1 = 0, c2 = 0;
 
 	char f1_cp[strlen(f1->nome)];
 	strcpy(f1_cp, f1->nome);
-	tokenize(f1_cp, v1, &c1, NAO_ALFA);
+	char **v1 = tokenize(f1_cp, &c1, NAO_ALFA);
 
 	char f2_cp[strlen(f2->nome)];
 	strcpy(f2_cp, f2->nome);
-	tokenize(f2_cp, v2, &c2, NAO_ALFA);
+	char **v2 = tokenize(f2_cp, &c2, NAO_ALFA);
 
 	int correspondencias = 0;
 	match(v1, v2, &correspondencias, c1, c2);
@@ -89,7 +88,7 @@ double filme_calcula_peso_nome(FILME* f1, FILME* f2) {
 }
 
 double filme_calcula_peso_ano(FILME *f1, FILME *f2) {
-	return 1 / (abs(f1->ano - f2->ano) + 1); 
+	return 1 / (fabs((int) f1->ano - (int) f2->ano) + 1); 
 }
 
 double filme_calcula_peso_generos(FILME *f1, FILME *f2) {
@@ -99,40 +98,56 @@ double filme_calcula_peso_generos(FILME *f1, FILME *f2) {
 	return (double) correspondencias / (double) (f1->n_generos + f2->n_generos);
 }
 
-double filme_calcula_peso_sinopse(DICIONARIO* d, FILME* f1, FILME* f2) {
+double filme_calcula_peso_sinopse(DICIONARIO *d, FILME *f1, FILME *f2) {
 	/*vetores de bits(1 = contem, 0 = nao contem)*/
 	unsigned correspondencias1[dicionario_numero_palavras(d)];
 	unsigned correspondencias2[dicionario_numero_palavras(d)];
-	char** v1 = NULL, **v2 = NULL;
 
 	int c1 = 0, c2 = 0;
 
 	char f1_cp[strlen(f1->sinopse)];
 	strcpy(f1_cp, f1->sinopse);
-	tokenize(f1_cp, v1, &c1, NAO_ALFA);
+	char **v1 = tokenize(f1_cp, &c1, NAO_ALFA);
+
+	char v1_e[c1][51];
+	for(int i = 0; i < c1; i++)
+		strcpy(v1_e[i], v1[i]);
 
 	char f2_cp[strlen(f2->sinopse)];
 	strcpy(f2_cp, f2->sinopse);
-	tokenize(f2_cp, v2, &c2, NAO_ALFA);
+	char **v2 = tokenize(f2_cp, &c2, NAO_ALFA);
 
-	for(int i = 0; i < dicionario_numero_palavras(d); i++){
-		correspondencias1[i] == (strcmp(dicionario_buscar_pos(d, i), v1[i]) == 0);
-		correspondencias2[i] == (strcmp(dicionario_buscar_pos(d, i), v2[i]) == 0);
+	char v2_e[c2][51];
+	for(int i = 0; i < c2; i++)
+		strcpy(v2_e[i], v2[i]);
+
+	qsort(v1_e, c1, sizeof(char) * 51, comparar_nome);
+	qsort(v2_e, c2, sizeof(char) * 51, comparar_nome);
+
+	for(int i = 0; i < dicionario_numero_palavras(d); i++) {
+		correspondencias1[i] = buscar(dicionario_buscar_pos(d, i), c1, sizeof(char) * 51, v1_e);
+		correspondencias2[i] = buscar(dicionario_buscar_pos(d, i), c2, sizeof(char) * 51, v2_e);
 	}
+
+	for(int i = 0; i < c1; i++) free(v1[i]);
+	for(int i = 0; i < c2; i++) free(v2[i]);
+
+	free(v1);
+	free(v2);
 
 	return cosseno(correspondencias1, correspondencias2, dicionario_numero_palavras(d));
 }
 
-char* filme_nome(FILME* filme){
+char *filme_nome(FILME *filme){
 	return filme->nome;
 }
 
 void filme_liberar(FILME *filme) {
 	free(filme->nome);
-
+	
 	for(int i = 0; i < filme->n_generos; i++)
 		free(filme->generos[i]);
-
+	
 	free(filme->generos);
 	free(filme->sinopse);
 	free(filme);

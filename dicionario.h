@@ -3,12 +3,11 @@
 
 typedef struct dicionario DICIONARIO;
 
-char** dicionario_para_vetor(DICIONARIO* d);
+DICIONARIO *dicionario_criar();
+void dicionario_inserir(DICIONARIO *d, char *nome);
 char *dicionario_buscar_pos(DICIONARIO *d, int i);
-DICIONARIO* dicionario_criar();
-void dicionario_inserir(DICIONARIO* d, char* nome);
-char *dicionario_buscar_pos(DICIONARIO *d, int i);
-int dicionario_numero_palavras(DICIONARIO* d);
+int dicionario_numero_palavras(DICIONARIO *d);
+char **dicionario_para_vetor(DICIONARIO *d);
 
 
 #endif

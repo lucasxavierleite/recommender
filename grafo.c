@@ -21,7 +21,7 @@ typedef struct pesos {
 } FILME_PESOS;
 
 typedef struct aresta {
-	unsigned int vertice;
+	unsigned vertice;
 	FILME_PESOS* pesos;
 	struct aresta *proximo;
 } ARESTA;
@@ -34,12 +34,12 @@ typedef struct vertice {
 struct grafo {
 	VERTICE *adj;
 	DICIONARIO* dicionario_sinopse;
-	unsigned int n_vertices;
+	unsigned n_vertices;
 };
 
-FILME_PESOS* grafo_calcula_peso(GRAFO* grafo, VERTICE v1, VERTICE v2){
+FILME_PESOS *grafo_calcula_peso(GRAFO* grafo, VERTICE v1, VERTICE v2){
 	/* FUNCAO CALLER PARA CALCULAR O PESO DE UMA ARESTA*/
-	FILME_PESOS* p = (FILME_PESOS*)malloc(sizeof(FILME_PESOS));
+	FILME_PESOS *p = (FILME_PESOS *) malloc(sizeof(FILME_PESOS));
 	p->nome = filme_calcula_peso_nome(v1.filme, v2.filme);
 	p->ano = filme_calcula_peso_ano(v1.filme, v2.filme);
 	p->generos = filme_calcula_peso_generos(v1.filme, v2.filme);
@@ -89,6 +89,7 @@ void grafo_calcula_arestas(GRAFO* grafo, int iv){
 			a->vertice = i;
 		}
 	}
+
 	return;
 }
 
@@ -102,10 +103,11 @@ void grafo_imprimir_vertice(GRAFO* grafo, VERTICE vertice){
 			proximo = proximo->proximo;
 		}
 	}
+
 	return;
 }
 
-int comparar_vertice_nome(const void* a, const void* b) {
+int comparar_vertice_nome(const void *a, const void *b) {
 	VERTICE *A = (VERTICE *) a;
 	VERTICE *B = (VERTICE *) b;
 
@@ -115,10 +117,10 @@ int comparar_vertice_nome(const void* a, const void* b) {
 
 VERTICE *buscar_nome(GRAFO *grafo, char *nome){
 	qsort(grafo->adj, grafo->n_vertices, sizeof(VERTICE), comparar_vertice_nome);
-	return bsearch(nome, grafo->adj, grafo->n_vertices, sizeof(VERTICE), comparar_vertice_nome);
+	return bsearch(nome, grafo->adj, grafo->n_vertices, sizeof(VERTICE *), comparar_vertice_nome);
 }
 
-void grafo_recomendar(GRAFO* grafo, char* nome){
+void grafo_recomendar(GRAFO *grafo, char *nome){
 	VERTICE *res = buscar_nome(grafo, nome);
 	grafo_imprimir_vertice(grafo, *res);
 }
