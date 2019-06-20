@@ -4,6 +4,7 @@
 typedef struct dicionario DICIONARIO;
 
 DICIONARIO *dicionario_criar();
+DICIONARIO* dicionario_criar_vetor(char** v);
 void dicionario_inserir(DICIONARIO *d, char *nome);
 char *dicionario_buscar_pos(DICIONARIO *d, int i);
 int dicionario_numero_palavras(DICIONARIO *d);
