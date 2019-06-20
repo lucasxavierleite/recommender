@@ -27,10 +27,10 @@ FILME *filme_criar(char *nome, int ano, char *generos, char *sinopse) {
 	char *token = strtok(generos, ",\n");
 
 	int i = 0;
-	while((token)) {
+	while(token) {
 		filme->generos = (char **) realloc(filme->generos, i + 1);
 		filme->generos[i] = (char *) malloc(strlen(token) + 1);
-		// trim(token);
+		trim(token);
 		strcpy(filme->generos[i], token);
 		token = strtok(NULL, ",\n");
 		i++;
@@ -71,31 +71,28 @@ FILME *filme_ler_arquivo(FILE *arquivo, DICIONARIO *dicionario_sinopse) {
 }
 
 double filme_calcula_peso_nome(FILME *f1, FILME *f2) {	
-	int c1 = 0, c2 = 0;
+	int nv1 = 0, nv2 = 0;
 
 	char f1_cp[strlen(f1->nome)];
 	strcpy(f1_cp, f1->nome);
-	char **v1 = tokenize(f1_cp, &c1, NAO_ALFA);
+	char **v1 = tokenize(f1_cp, &nv1, NAO_ALFA);
 
 	char f2_cp[strlen(f2->nome)];
 	strcpy(f2_cp, f2->nome);
-	char **v2 = tokenize(f2_cp, &c2, NAO_ALFA);
+	char **v2 = tokenize(f2_cp, &nv2, NAO_ALFA);
 
-	int correspondencias = 0;
-	match(v1, v2, &correspondencias, c1, c2);
+	int correspondencias = match(v1, v2, nv1, nv2);
 	
-	return (double) correspondencias / (double) (c1 + c2);
+	return (double) correspondencias / (double) fmax(nv1, nv2);
 }
 
 double filme_calcula_peso_ano(FILME *f1, FILME *f2) {
-	return 1 / (fabs((int) f1->ano - (int) f2->ano) + 1); 
+	return 1 / (fabs((int) f1->ano - (int) f2->ano) / RELACAO_MAXIMA_ANO + 1); 
 }
 
 double filme_calcula_peso_generos(FILME *f1, FILME *f2) {
-	int correspondencias = 0;
-	match(f1->generos, f2->generos, &correspondencias, f1->n_generos, f2->n_generos);
-	
-	return (double) correspondencias / (double) (f1->n_generos + f2->n_generos);
+	int correspondencias = match(f1->generos, f2->generos, f1->n_generos, f2->n_generos);
+	return (double) correspondencias / (double) fmax(f1->n_generos, f2->n_generos);
 }
 
 double filme_calcula_peso_sinopse(DICIONARIO *d, FILME *f1, FILME *f2) {
@@ -103,34 +100,34 @@ double filme_calcula_peso_sinopse(DICIONARIO *d, FILME *f1, FILME *f2) {
 	unsigned correspondencias1[dicionario_numero_palavras(d)];
 	unsigned correspondencias2[dicionario_numero_palavras(d)];
 
-	int c1 = 0, c2 = 0;
+	int nv1 = 0, nv2 = 0;
 
 	char f1_cp[strlen(f1->sinopse)];
 	strcpy(f1_cp, f1->sinopse);
-	char **v1 = tokenize(f1_cp, &c1, NAO_ALFA);
+	char **v1 = tokenize(f1_cp, &nv1, NAO_ALFA);
 
-	char v1_e[c1][51];
-	for(int i = 0; i < c1; i++)
+	char v1_e[nv1][51];
+	for(int i = 0; i < nv1; i++)
 		strcpy(v1_e[i], v1[i]);
 
 	char f2_cp[strlen(f2->sinopse)];
 	strcpy(f2_cp, f2->sinopse);
-	char **v2 = tokenize(f2_cp, &c2, NAO_ALFA);
+	char **v2 = tokenize(f2_cp, &nv2, NAO_ALFA);
 
-	char v2_e[c2][51];
-	for(int i = 0; i < c2; i++)
+	char v2_e[nv2][51];
+	for(int i = 0; i < nv2; i++)
 		strcpy(v2_e[i], v2[i]);
 
-	qsort(v1_e, c1, sizeof(char) * 51, comparar_nome);
-	qsort(v2_e, c2, sizeof(char) * 51, comparar_nome);
+	qsort(v1_e, nv1, sizeof(char) * 51, comparar_nome);
+	qsort(v2_e, nv2, sizeof(char) * 51, comparar_nome);
 
 	for(int i = 0; i < dicionario_numero_palavras(d); i++) {
-		correspondencias1[i] = buscar(dicionario_buscar_pos(d, i), c1, sizeof(char) * 51, v1_e);
-		correspondencias2[i] = buscar(dicionario_buscar_pos(d, i), c2, sizeof(char) * 51, v2_e);
+		correspondencias1[i] = buscar(dicionario_buscar_pos(d, i), nv1, sizeof(char) * 51, v1_e);
+		correspondencias2[i] = buscar(dicionario_buscar_pos(d, i), nv2, sizeof(char) * 51, v2_e);
 	}
 
-	for(int i = 0; i < c1; i++) free(v1[i]);
-	for(int i = 0; i < c2; i++) free(v2[i]);
+	for(int i = 0; i < nv1; i++) free(v1[i]);
+	for(int i = 0; i < nv2; i++) free(v2[i]);
 
 	free(v1);
 	free(v2);

@@ -5,12 +5,11 @@
 #include "filme.h"
 #include "aux.h"
 
-#define PONDERACAO_NOME 2
-#define PONDERACAO_SINOPSE 3
-#define PONDERACAO_GENEROS 4
 #define PONDERACAO_ANO 1
-#define PESO_MINIMO 0.65
-
+#define PONDERACAO_SINOPSE 2
+#define PONDERACAO_NOME 3
+#define PONDERACAO_GENEROS 4
+#define PESO_MINIMO 0.1
 
 typedef struct pesos {
 	double nome;
@@ -22,7 +21,7 @@ typedef struct pesos {
 
 typedef struct aresta {
 	unsigned vertice;
-	FILME_PESOS* pesos;
+	FILME_PESOS *pesos;
 	struct aresta *proximo;
 } ARESTA;
 
@@ -49,7 +48,6 @@ FILME_PESOS *grafo_calcula_peso(GRAFO* grafo, VERTICE v1, VERTICE v2){
 	return p;
 }
 
-
 void grafo_adicionar_vertice(GRAFO *grafo, FILME *filme) {
 	if(grafo) {
 		grafo->adj = realloc(grafo->adj, (grafo->n_vertices + 1) * sizeof(VERTICE));
@@ -60,9 +58,9 @@ void grafo_adicionar_vertice(GRAFO *grafo, FILME *filme) {
 	}
 }
 
-void grafo_calcula_arestas(GRAFO* grafo, int iv){
-	if(grafo){
-		for(int i = 0; i < grafo->n_vertices; i++){
+void grafo_calcula_arestas(GRAFO *grafo, int iv){
+	if(grafo) {
+		for(int i = 0; i < grafo->n_vertices; i++) {
 			if(i == iv)
 				continue;
 
@@ -74,57 +72,67 @@ void grafo_calcula_arestas(GRAFO* grafo, int iv){
 			ARESTA *atual = NULL;
 			ARESTA *proximo = grafo->adj[iv].inicio;
 
-			while(proximo && proximo->pesos->media < pesos->media) {
+			/*while(proximo && proximo->pesos->media < pesos->media) {*/
+			while(proximo) {
 				atual = proximo;
 				proximo = proximo->proximo;
 			}
 
 			ARESTA *a = (ARESTA *) malloc(sizeof(ARESTA));
-			a->pesos = pesos;
 
-			ARESTA *aux = atual->proximo;
-			atual->proximo = a;
-			a->proximo = aux;
+			if(atual) {
+				ARESTA *aux = atual->proximo;
+				atual->proximo = a;
+			} else {
+				a->proximo = NULL;
+				grafo->adj[iv].inicio = a;
+			}
 
 			a->vertice = i;
+			a->pesos = pesos;
 		}
 	}
 
 	return;
 }
 
-void grafo_imprimir_vertice(GRAFO* grafo, VERTICE vertice){
-	if(grafo){
-		ARESTA *atual = NULL;
-		ARESTA *proximo = vertice.inicio;
+void grafo_imprimir_vertice(GRAFO *grafo, VERTICE *vertice) {
+	if(grafo) {
+		ARESTA *proximo = vertice->inicio;
 
 		while(proximo) {
 			filme_imprimir(grafo->adj[proximo->vertice].filme);
 			proximo = proximo->proximo;
 		}
 	}
-
-	return;
 }
 
-int comparar_vertice_nome(const void *a, const void *b) {
+int grafo_comparar_vertice_nome(const void *a, const void *b) {
 	VERTICE *A = (VERTICE *) a;
 	VERTICE *B = (VERTICE *) b;
 
 	return strcmp(filme_nome(B->filme), filme_nome(A->filme));
 }
 
-
 VERTICE *buscar_nome(GRAFO *grafo, char *nome){
-	qsort(grafo->adj, grafo->n_vertices, sizeof(VERTICE), comparar_vertice_nome);
-	return bsearch(nome, grafo->adj, grafo->n_vertices, sizeof(VERTICE *), comparar_vertice_nome);
+	/*qsort(grafo->adj, grafo->n_vertices, sizeof(VERTICE), grafo_comparar_vertice_nome);*/
+	/*return bsearch(nome, grafo->adj, grafo->n_vertices, sizeof(VERTICE), grafo_comparar_vertice_nome);*/
+	for(int i = 0; i < grafo->n_vertices; i++)
+		if(comparar_nome(nome, filme_nome(grafo->adj[i].filme)) == 0)
+			return &grafo->adj[i];
 }
 
 void grafo_recomendar(GRAFO *grafo, char *nome){
 	VERTICE *res = buscar_nome(grafo, nome);
-	grafo_imprimir_vertice(grafo, *res);
-}
 
+	/*ARESTA *proximo = res->inicio;*/
+
+	/*while(proximo) {*/
+		/*filme_imprimir(grafo->adj[proximo->vertice].filme);*/
+	/*}*/
+
+	grafo_imprimir_vertice(grafo, res);
+}
 
 GRAFO *grafo_criar(FILE *arquivo) {
 	GRAFO *grafo = (GRAFO *) malloc(sizeof(GRAFO));

@@ -29,6 +29,7 @@ char **tokenize(char *str, int *n, char *delim) {
 		v = (char **) realloc(v, sizeof(char *) * (*n+1));
 		// v[*n] = (char *) malloc(sizeof(char) * (strlen(token) + 1));
 		v[*n] = (char *) malloc(sizeof(char) * 51);
+		trim(token);
 		strcpy(v[*n], token);
 		token = strtok(NULL, delim);
 		(*n)++;
@@ -37,18 +38,22 @@ char **tokenize(char *str, int *n, char *delim) {
 	return v;
 }
 
-void match(char **a, char **b, int *n, int c1, int c2) {
-	for(int i = 0; i < fmin(c1, c2); i++) {
-		for(int j = 0; j < fmax(c1, c2); j++) {
-			if(c1 < c2) {
-				if(strcmp(a[i], b[j]) == 0) (*n)++;
-			} else {
-				if(strcmp(a[j], b[i]) == 0) (*n)++;
-			}
-		}
+int match(char **a, char **b, int na, int nb) {
+	int n = 0;
+	int n_max = fmax(na, nb);
+	int n_min = fmin(na, nb);
+
+	if(n_max == na) {
+		for(int i = 0; i < n_max; i++)
+			for(int j = 0; j < n_min; j++)
+				if(strcmp(a[i], b[j]) == 0) n++;
+	} else if(n_max == nb) {
+		for(int i = 0; i < n_min; i++)
+			for(int j = 0; j < n_max; j++)
+				if(strcmp(a[i], b[j]) == 0) n++;
 	}
 
-	return;
+	return n;
 }
 
 int comparar_nome(const void *a, const void *b) {

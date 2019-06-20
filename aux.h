@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 void trim(char *str);
-void match(char **a, char **b, int *n, int c1, int c2);
+int match(char **a, char **b, int na, int nb);
 double cosseno(int* u, int* v, int n);
 char** tokenize(char *str, int *n, char *delim);
 int comparar_nome(const void *a, const void *b);

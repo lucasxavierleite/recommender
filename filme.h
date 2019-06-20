@@ -1,6 +1,9 @@
 #ifndef FILME_H
 #define FILME_H
+
 #include "dicionario.h"
+
+#define RELACAO_MAXIMA_ANO 8
 
 typedef struct filme FILME;
 
