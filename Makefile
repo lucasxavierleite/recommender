@@ -1,5 +1,5 @@
 all:
-	gcc aux.c dicionario.c erro.c filme.c grafo.c recommender.c -g -lm -o recommender
+	gcc aux.c dicionario.c interface.c filme.c grafo.c recommender.c -g -lm -o recommender
 
 run:
 	./recommender filmes.txt

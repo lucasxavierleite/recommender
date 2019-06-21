@@ -3,7 +3,7 @@
 #include <string.h>
 #include "grafo.h"
 #include "filme.h"
-#include "erro.h"
+#include "interface.h"
 #include "aux.h"
 
 typedef struct pesos {
@@ -24,6 +24,7 @@ typedef struct vertice {
 	FILME *filme;
 	ARESTA *inicio;
 	unsigned n_relacionados;
+	unsigned n_relacionados_sinopse;
 } VERTICE;
 
 struct grafo {
@@ -51,11 +52,12 @@ void grafo_adicionar_vertice(GRAFO *grafo, FILME *filme) {
 		grafo->adj[grafo->n_vertices].inicio->vertice = -1;
 		grafo->adj[grafo->n_vertices].inicio->proximo = NULL;
 		grafo->adj[grafo->n_vertices].n_relacionados = 0;
+		grafo->adj[grafo->n_vertices].n_relacionados_sinopse = 0;
 		grafo->n_vertices++;
 	}
 }
 
-void grafo_calcula_arestas(DICIONARIO* stopwords, GRAFO *grafo, int iv){
+void grafo_calcula_arestas(GRAFO *grafo, int iv, DICIONARIO *stopwords){
 	if(grafo) {
 		for(int i = 0; i < grafo->n_vertices; i++) {
 			if(i == iv)
@@ -63,12 +65,9 @@ void grafo_calcula_arestas(DICIONARIO* stopwords, GRAFO *grafo, int iv){
 
 			FILME_PESOS *pesos = grafo_calcula_peso(grafo, grafo->adj[iv],grafo->adj[i], stopwords);
 
-			if(pesos->media < PESO_MINIMO)
-				continue;
-
 			ARESTA *p = grafo->adj[iv].inicio;
 
-			while(p->proximo && p->pesos->media > pesos->media)
+			while(p->proximo && p->proximo->pesos->media > pesos->media)
 				p = p->proximo;
 
 			ARESTA *a = (ARESTA *) malloc(sizeof(ARESTA));
@@ -77,20 +76,36 @@ void grafo_calcula_arestas(DICIONARIO* stopwords, GRAFO *grafo, int iv){
 			a->proximo = p->proximo;
 			p->proximo = a;
 
-			grafo->adj[iv].n_relacionados++;
+			if(pesos->sinopse > PESO_MINIMO)
+				grafo->adj[iv].n_relacionados_sinopse++;
+
+			if(pesos->media > PESO_MINIMO)
+				grafo->adj[iv].n_relacionados++;
 		}
 	}
 }
 
-void grafo_imprimir_vertice(GRAFO *grafo, VERTICE *vertice) {
+void grafo_imprimir_vertice(GRAFO *grafo, VERTICE *vertice, int peso_base) {
 	if(grafo) {
 		ARESTA *p = vertice->inicio;
 
 		while(p->proximo) {
+			double relevancia;
+
+			if(peso_base == RECOMENDACAO_GERAL) {
+				if(p->proximo->pesos->media < PESO_MINIMO) break;
+				relevancia = p->proximo->pesos->media * 100;
+			} else if(peso_base == RECOMENDACAO_SINOPSE) {
+				relevancia = p->proximo->pesos->sinopse * 100;
+			}
+
 			filme_imprimir_lista(grafo->adj[p->proximo->vertice].filme);
-			printf(" | %%%.2lf relevante\n", p->proximo->pesos->media * 100);
+
+			printf(ANSI_COR_PRETO_BRILHANTE "  | %%%.2lf relevante\n", relevancia, ANSI_COR_RESET);
 			p = p->proximo;
 		}
+
+		printf("\n");
 	}
 }
 
@@ -101,12 +116,13 @@ int grafo_comparar_vertice_nome(const void *a, const void *b) {
 	return strcasecmp(filme_nome(A->filme), filme_nome(B->filme));
 }
 
-VERTICE *grafo_buscar_vertice(GRAFO *grafo, char *nome){
-	/*qsort(grafo->adj, grafo->n_vertices, sizeof(VERTICE), grafo_comparar_vertice_nome);*/
-	/*return bsearch(nome, grafo->adj, grafo->n_vertices, sizeof(VERTICE), grafo_comparar_vertice_nome);*/
-	for(int i = 0; i < grafo->n_vertices; i++)
-		if(comparar_nome(nome, filme_nome(grafo->adj[i].filme)) == 0)
+VERTICE *grafo_buscar_vertice(GRAFO *grafo, char *nome) {
+	for(int i = 0; i < grafo->n_vertices; i++) {
+		if(comparar_nome(nome, filme_nome(grafo->adj[i].filme)) < 0)
+			break;
+		else if(comparar_nome(nome, filme_nome(grafo->adj[i].filme)) == 0)
 			return &grafo->adj[i];
+	}
 
 	return NULL;
 }
@@ -115,19 +131,22 @@ void grafo_buscar(GRAFO *grafo, char *nome) {
 	VERTICE *res = grafo_buscar_vertice(grafo, nome);
 
 	if(res) {
+		printf("\n");
 		filme_imprimir(res->filme);
+		printf("\n\n");
 	} else {
 		erro_filme_nao_encontrado();
 	}
 }
 
-void grafo_recomendar(GRAFO *grafo, char *nome) {
+void grafo_recomendar(GRAFO *grafo, char *nome, int peso_base) {
 	VERTICE *res = grafo_buscar_vertice(grafo, nome);
 
 	if(res) {
-		if(res->n_relacionados > 0) {
-			printf("\n> Talvez você goste de: \n\n");
-			grafo_imprimir_vertice(grafo, res);
+		if( (peso_base == RECOMENDACAO_SINOPSE && res->n_relacionados_sinopse > 0) ||
+			(peso_base == RECOMENDACAO_GERAL && res->n_relacionados > 0)) {
+			printf(ANSI_COR_PRETO_BRILHANTE "\n> Talvez você goste de: \n\n" ANSI_COR_RESET);
+			grafo_imprimir_vertice(grafo, res, peso_base);
 		} else {
 			erro_filme_sem_recomendacoes();
 		}
@@ -155,8 +174,10 @@ GRAFO *grafo_criar(FILE *arquivo) {
 		}
 	}
 
+	qsort(grafo->adj, grafo->n_vertices, sizeof(VERTICE), grafo_comparar_vertice_nome);
+
 	for(int i = 0; i < grafo->n_vertices; i++)
-		grafo_calcula_arestas(stopwords, grafo, i);
+		grafo_calcula_arestas(grafo, i, stopwords);
 
 	return grafo;
 }
@@ -179,9 +200,13 @@ void grafo_liberar(GRAFO *grafo) {
 }
 
 void grafo_imprimir_filmes(GRAFO *grafo) {
+	printf("\n");
+
 	for(int i = 0; i < grafo->n_vertices; i++) {
-		printf("%d. ", i + 1);
+		printf(ANSI_COR_PRETO_BRILHANTE "%d. ", i + 1, ANSI_COR_RESET);
 		filme_imprimir_lista(grafo->adj[i].filme);
 		printf("\n");
 	}
+
+	printf("\n");
 }

@@ -1,6 +1,8 @@
 #ifndef AUX_H
 #define AUX_H
 
+#define NAO_ALFA  " !@#$%*()_+=-[{]};:?//.,|'\n"
+
 #include "dicionario.h"
 
 void trim(char *str);

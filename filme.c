@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "filme.h"
-#include "aux.h"
 #include <math.h>
+#include "filme.h"
 #include "dicionario.h"
-
-#define NAO_ALFA  " !@#$%*()_+=-[{]};:?//.,|'\n"
+#include "aux.h"
+#include "interface.h"
 
 struct filme {
 	char *nome;
@@ -29,7 +28,7 @@ FILME *filme_criar(char *nome, int ano, char *generos, char *sinopse) {
 	return filme;
 }
 
-FILME *filme_ler_arquivo(FILE *arquivo, DICIONARIO *dicionario_sinopse, DICIONARIO* stopwords) {
+FILME *filme_ler_arquivo(FILE *arquivo, DICIONARIO *dicionario_sinopse, DICIONARIO *stopwords) {
 	char lixo[50];
 	char nome[100];
 	int ano;
@@ -135,7 +134,7 @@ void filme_liberar(FILME *filme) {
 }
 
 void filme_imprimir(FILME *filme) {
-	printf("nome: %s\n", filme->nome);
+	printf(ANSI_COR_PRETO_BRILHANTE "nome: %s\n", filme->nome);
 	printf("ano: %d\n", filme->ano);
 	printf("generos: ");
 
@@ -146,14 +145,16 @@ void filme_imprimir(FILME *filme) {
 	}
 
 	printf("\n");
-	printf("sinopse: %s", filme->sinopse);
+	printf("sinopse: %s", filme->sinopse, ANSI_COR_RESET);
 }
 
 void filme_imprimir_lista(FILME *filme) {
-	printf("%s (%d) | ", filme->nome, filme->ano);
+	printf(ANSI_COR_PRETO_BRILHANTE "%s (%d) | ", filme->nome, filme->ano);
 	for(int i = 0; i < filme->n_generos; i++) {
 		printf("%s", filme->generos[i]);
 		if(i + 1 < filme->n_generos)
 			printf(", ");
 	}
+
+	printf(ANSI_COR_RESET "");
 }

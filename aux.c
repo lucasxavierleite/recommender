@@ -117,6 +117,8 @@ int match(char **a, char **b, int na, int nb) {
 }
 
 int comparar_nome(const void *a, const void *b) {
+	for(int i = 0; i < strlen((char *) a); i++)
+
 	return strcasecmp((char *) a, (char *) b);  
 }
 
