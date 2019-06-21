@@ -22,16 +22,15 @@ DICIONARIO* dicionario_criar() {
     return d;
 }
 
-DICIONARIO* dicionario_criar_vetor(char** v) {
+DICIONARIO* dicionario_criar_vetor(char** v, int n) {
     DICIONARIO *d = (DICIONARIO *) malloc(sizeof(DICIONARIO));
 
     if(d) {
         d->palavras = (char**)malloc(sizeof(char*) * sizeof(v));
-        for(int i = 0; i < sizeof(v); i++){
-            d->palavras[i] = malloc(sizeof(char) * strlen(v[i]));
-            strcpy(d->palavras, v);
-        }
         d->n_palavras = 0;
+        for(int i = 0; i < n; i++){
+            dicionario_inserir(d, v[i]);
+        }
         d->ordenado = 0;
     }
 

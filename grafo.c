@@ -36,13 +36,13 @@ struct grafo {
 	unsigned n_vertices;
 };
 
-FILME_PESOS *grafo_calcula_peso(GRAFO* grafo, VERTICE v1, VERTICE v2){
+FILME_PESOS *grafo_calcula_peso(GRAFO* grafo, VERTICE v1, VERTICE v2, DICIONARIO* stopwords){
 	/* FUNCAO CALLER PARA CALCULAR O PESO DE UMA ARESTA*/
 	FILME_PESOS *p = (FILME_PESOS *) malloc(sizeof(FILME_PESOS));
-	p->nome = filme_calcula_peso_nome(v1.filme, v2.filme);
+	p->nome = filme_calcula_peso_nome(stopwords, v1.filme, v2.filme);
 	p->ano = filme_calcula_peso_ano(v1.filme, v2.filme);
 	p->generos = filme_calcula_peso_generos(v1.filme, v2.filme);
-	p->sinopse = filme_calcula_peso_sinopse(grafo->dicionario_sinopse, v1.filme, v2.filme);
+	p->sinopse = filme_calcula_peso_sinopse(grafo->dicionario_sinopse, stopwords, v1.filme, v2.filme);
 	p->media = (p->nome * PONDERACAO_NOME + p->ano * PONDERACAO_ANO + p->generos * PONDERACAO_GENEROS + p->sinopse * PONDERACAO_SINOPSE) /
 		(PONDERACAO_NOME + PONDERACAO_ANO + PONDERACAO_GENEROS + PONDERACAO_SINOPSE);
 	return p;
@@ -58,13 +58,13 @@ void grafo_adicionar_vertice(GRAFO *grafo, FILME *filme) {
 	}
 }
 
-void grafo_calcula_arestas(GRAFO *grafo, int iv){
+void grafo_calcula_arestas(DICIONARIO* stopwords, GRAFO *grafo, int iv){
 	if(grafo) {
 		for(int i = 0; i < grafo->n_vertices; i++) {
 			if(i == iv)
 				continue;
 
-			FILME_PESOS *pesos = grafo_calcula_peso(grafo, grafo->adj[iv],grafo->adj[i]);
+			FILME_PESOS *pesos = grafo_calcula_peso(grafo, grafo->adj[iv],grafo->adj[i], stopwords);
 
 			if(pesos->media < PESO_MINIMO)
 				continue;
@@ -137,6 +137,7 @@ void grafo_recomendar(GRAFO *grafo, char *nome){
 GRAFO *grafo_criar(FILE *arquivo) {
 	GRAFO *grafo = (GRAFO *) malloc(sizeof(GRAFO));
 	grafo->dicionario_sinopse = dicionario_criar();
+	DICIONARIO* stopwords = dicionario_criar_vetor(vet_stopwords_global, 220);
 
 	if(grafo) {
 		grafo->adj = NULL;
@@ -147,12 +148,12 @@ GRAFO *grafo_criar(FILE *arquivo) {
 			if(feof(arquivo))
 				break;
 
-			FILME *filme = filme_ler_arquivo(arquivo, grafo->dicionario_sinopse);
+			FILME *filme = filme_ler_arquivo(arquivo, grafo->dicionario_sinopse, stopwords);
 			grafo_adicionar_vertice(grafo, filme);
 		}
 	}
 	for(int i = 0; i < grafo->n_vertices; i++)
-		grafo_calcula_arestas(grafo, i);
+		grafo_calcula_arestas(stopwords, grafo, i);
 
 	return grafo;
 }

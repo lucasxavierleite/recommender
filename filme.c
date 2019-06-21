@@ -45,7 +45,7 @@ FILME *filme_criar(char *nome, int ano, char *generos, char *sinopse) {
 	return filme;
 }
 
-FILME *filme_ler_arquivo(FILE *arquivo, DICIONARIO *dicionario_sinopse) {
+FILME *filme_ler_arquivo(FILE *arquivo, DICIONARIO *dicionario_sinopse, DICIONARIO* stopwords) {
 	char lixo[50];
 	char nome[100];
 	int ano;
@@ -61,7 +61,8 @@ FILME *filme_ler_arquivo(FILE *arquivo, DICIONARIO *dicionario_sinopse) {
 	char sinopse_cp[strlen(sinopse)];
 	strcpy(sinopse_cp, sinopse);
 	
-	char **v = tokenize(sinopse_cp, &nv, NAO_ALFA);
+	char **v = tokenize_stopwords(sinopse_cp, &nv, NAO_ALFA, stopwords);
+	
 
 	for(int i = 0; i < nv; i++) {
 		dicionario_inserir(dicionario_sinopse, v[i]);
@@ -70,16 +71,16 @@ FILME *filme_ler_arquivo(FILE *arquivo, DICIONARIO *dicionario_sinopse) {
 	return filme_criar(nome, ano, generos, sinopse);
 }
 
-double filme_calcula_peso_nome(FILME *f1, FILME *f2) {	
+double filme_calcula_peso_nome(DICIONARIO* stopwords, FILME *f1, FILME *f2) {	
 	int nv1 = 0, nv2 = 0;
 
 	char f1_cp[strlen(f1->nome)];
 	strcpy(f1_cp, f1->nome);
-	char **v1 = tokenize(f1_cp, &nv1, NAO_ALFA);
+	char **v1 = tokenize_stopwords(f1_cp, &nv1, NAO_ALFA, stopwords);
 
 	char f2_cp[strlen(f2->nome)];
 	strcpy(f2_cp, f2->nome);
-	char **v2 = tokenize(f2_cp, &nv2, NAO_ALFA);
+	char **v2 = tokenize_stopwords(f2_cp, &nv2, NAO_ALFA, stopwords);
 
 	int correspondencias = match(v1, v2, nv1, nv2);
 	
@@ -95,7 +96,7 @@ double filme_calcula_peso_generos(FILME *f1, FILME *f2) {
 	return (double) correspondencias / (double) fmax(f1->n_generos, f2->n_generos);
 }
 
-double filme_calcula_peso_sinopse(DICIONARIO *d, FILME *f1, FILME *f2) {
+double filme_calcula_peso_sinopse(DICIONARIO *d,DICIONARIO* stopwords, FILME *f1, FILME *f2) {
 	/*vetores de bits(1 = contem, 0 = nao contem)*/
 	unsigned correspondencias1[dicionario_numero_palavras(d)];
 	unsigned correspondencias2[dicionario_numero_palavras(d)];
@@ -104,7 +105,7 @@ double filme_calcula_peso_sinopse(DICIONARIO *d, FILME *f1, FILME *f2) {
 
 	char f1_cp[strlen(f1->sinopse)];
 	strcpy(f1_cp, f1->sinopse);
-	char **v1 = tokenize(f1_cp, &nv1, NAO_ALFA);
+	char **v1 = tokenize_stopwords(f1_cp, &nv1, NAO_ALFA, stopwords);
 
 	char v1_e[nv1][51];
 	for(int i = 0; i < nv1; i++)
@@ -112,7 +113,7 @@ double filme_calcula_peso_sinopse(DICIONARIO *d, FILME *f1, FILME *f2) {
 
 	char f2_cp[strlen(f2->sinopse)];
 	strcpy(f2_cp, f2->sinopse);
-	char **v2 = tokenize(f2_cp, &nv2, NAO_ALFA);
+	char **v2 = tokenize_stopwords(f2_cp, &nv2, NAO_ALFA, stopwords);
 
 	char v2_e[nv2][51];
 	for(int i = 0; i < nv2; i++)
