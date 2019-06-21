@@ -3,13 +3,8 @@
 #include <string.h>
 #include "grafo.h"
 #include "filme.h"
+#include "erro.h"
 #include "aux.h"
-
-#define PONDERACAO_ANO 1
-#define PONDERACAO_SINOPSE 2
-#define PONDERACAO_NOME 3
-#define PONDERACAO_GENEROS 4
-#define PESO_MINIMO 0.1
 
 typedef struct pesos {
 	double nome;
@@ -27,17 +22,17 @@ typedef struct aresta {
 
 typedef struct vertice {
 	FILME *filme;
-	ARESTA *inicio, *fim;
+	ARESTA *inicio;
+	unsigned n_relacionados;
 } VERTICE;
 
 struct grafo {
 	VERTICE *adj;
-	DICIONARIO* dicionario_sinopse;
+	DICIONARIO *dicionario_sinopse;
 	unsigned n_vertices;
 };
 
-FILME_PESOS *grafo_calcula_peso(GRAFO* grafo, VERTICE v1, VERTICE v2){
-	/* FUNCAO CALLER PARA CALCULAR O PESO DE UMA ARESTA*/
+FILME_PESOS *grafo_calcula_peso(GRAFO *grafo, VERTICE v1, VERTICE v2){
 	FILME_PESOS *p = (FILME_PESOS *) malloc(sizeof(FILME_PESOS));
 	p->nome = filme_calcula_peso_nome(v1.filme, v2.filme);
 	p->ano = filme_calcula_peso_ano(v1.filme, v2.filme);
@@ -52,8 +47,10 @@ void grafo_adicionar_vertice(GRAFO *grafo, FILME *filme) {
 	if(grafo) {
 		grafo->adj = realloc(grafo->adj, (grafo->n_vertices + 1) * sizeof(VERTICE));
 		grafo->adj[grafo->n_vertices].filme = filme; 
-		grafo->adj[grafo->n_vertices].inicio = NULL; /*inicio lista de arestas*/
-		grafo->adj[grafo->n_vertices].fim = NULL;/*fim lista de arestas*/
+		grafo->adj[grafo->n_vertices].inicio = (ARESTA *) malloc(sizeof(ARESTA));
+		grafo->adj[grafo->n_vertices].inicio->vertice = -1;
+		grafo->adj[grafo->n_vertices].inicio->proximo = NULL;
+		grafo->adj[grafo->n_vertices].n_relacionados = 0;
 		grafo->n_vertices++;
 	}
 }
@@ -69,40 +66,30 @@ void grafo_calcula_arestas(GRAFO *grafo, int iv){
 			if(pesos->media < PESO_MINIMO)
 				continue;
 
-			ARESTA *atual = NULL;
-			ARESTA *proximo = grafo->adj[iv].inicio;
+			ARESTA *p = grafo->adj[iv].inicio;
 
-			/*while(proximo && proximo->pesos->media < pesos->media) {*/
-			while(proximo) {
-				atual = proximo;
-				proximo = proximo->proximo;
-			}
+			while(p->proximo && p->pesos->media > pesos->media)
+				p = p->proximo;
 
 			ARESTA *a = (ARESTA *) malloc(sizeof(ARESTA));
-
-			if(atual) {
-				ARESTA *aux = atual->proximo;
-				atual->proximo = a;
-			} else {
-				a->proximo = NULL;
-				grafo->adj[iv].inicio = a;
-			}
-
 			a->vertice = i;
 			a->pesos = pesos;
+			a->proximo = p->proximo;
+			p->proximo = a;
+
+			grafo->adj[iv].n_relacionados++;
 		}
 	}
-
-	return;
 }
 
 void grafo_imprimir_vertice(GRAFO *grafo, VERTICE *vertice) {
 	if(grafo) {
-		ARESTA *proximo = vertice->inicio;
+		ARESTA *p = vertice->inicio;
 
-		while(proximo) {
-			filme_imprimir(grafo->adj[proximo->vertice].filme);
-			proximo = proximo->proximo;
+		while(p->proximo) {
+			filme_imprimir_lista(grafo->adj[p->proximo->vertice].filme);
+			printf(" | %%%.2lf relevante\n", p->proximo->pesos->media * 100);
+			p = p->proximo;
 		}
 	}
 }
@@ -111,27 +98,42 @@ int grafo_comparar_vertice_nome(const void *a, const void *b) {
 	VERTICE *A = (VERTICE *) a;
 	VERTICE *B = (VERTICE *) b;
 
-	return strcmp(filme_nome(B->filme), filme_nome(A->filme));
+	return strcasecmp(filme_nome(A->filme), filme_nome(B->filme));
 }
 
-VERTICE *buscar_nome(GRAFO *grafo, char *nome){
+VERTICE *grafo_buscar_vertice(GRAFO *grafo, char *nome){
 	/*qsort(grafo->adj, grafo->n_vertices, sizeof(VERTICE), grafo_comparar_vertice_nome);*/
 	/*return bsearch(nome, grafo->adj, grafo->n_vertices, sizeof(VERTICE), grafo_comparar_vertice_nome);*/
 	for(int i = 0; i < grafo->n_vertices; i++)
 		if(comparar_nome(nome, filme_nome(grafo->adj[i].filme)) == 0)
 			return &grafo->adj[i];
+
+	return NULL;
 }
 
-void grafo_recomendar(GRAFO *grafo, char *nome){
-	VERTICE *res = buscar_nome(grafo, nome);
+void grafo_buscar(GRAFO *grafo, char *nome) {
+	VERTICE *res = grafo_buscar_vertice(grafo, nome);
 
-	/*ARESTA *proximo = res->inicio;*/
+	if(res) {
+		filme_imprimir(res->filme);
+	} else {
+		erro_filme_nao_encontrado();
+	}
+}
 
-	/*while(proximo) {*/
-		/*filme_imprimir(grafo->adj[proximo->vertice].filme);*/
-	/*}*/
+void grafo_recomendar(GRAFO *grafo, char *nome) {
+	VERTICE *res = grafo_buscar_vertice(grafo, nome);
 
-	grafo_imprimir_vertice(grafo, res);
+	if(res) {
+		if(res->n_relacionados > 0) {
+			printf("\n> Talvez você goste de: \n\n");
+			grafo_imprimir_vertice(grafo, res);
+		} else {
+			erro_filme_sem_recomendacoes();
+		}
+	} else {
+		erro_filme_nao_encontrado();
+	}
 }
 
 GRAFO *grafo_criar(FILE *arquivo) {
@@ -151,6 +153,7 @@ GRAFO *grafo_criar(FILE *arquivo) {
 			grafo_adicionar_vertice(grafo, filme);
 		}
 	}
+
 	for(int i = 0; i < grafo->n_vertices; i++)
 		grafo_calcula_arestas(grafo, i);
 

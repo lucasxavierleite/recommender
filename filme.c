@@ -24,21 +24,23 @@ FILME *filme_criar(char *nome, int ano, char *generos, char *sinopse) {
 	filme->ano = ano;
 	filme->generos = NULL;
 
-	char *token = strtok(generos, ",\n");
+	filme->generos = tokenize(generos, &filme->n_generos, ",\n");
 
-	int i = 0;
-	while(token) {
-		filme->generos = (char **) realloc(filme->generos, i + 1);
-		filme->generos[i] = (char *) malloc(strlen(token) + 1);
-		trim(token);
-		strcpy(filme->generos[i], token);
-		token = strtok(NULL, ",\n");
-		i++;
-	}
+	/*char *token = strtok(generos, ",\n");*/
 
-	free(token);
+	/*int i = 0;*/
+	/*while(token) {*/
+		/*filme->generos = (char **) realloc(filme->generos, i + 1);*/
+		/*filme->generos[i] = (char *) malloc(strlen(token) + 1);*/
+		/*trim(token);*/
+		/*strcpy(filme->generos[i], token);*/
+		/*token = strtok(NULL, ",\n");*/
+		/*i++;*/
+	/*}*/
 
-	filme->n_generos = i;
+	/*free(token);*/
+
+	/*filme->n_generos = i;*/
 	filme->sinopse = (char *) malloc(sizeof(char) * strlen(sinopse) + 1);
 	strcpy(filme->sinopse, sinopse);
 
@@ -162,11 +164,11 @@ void filme_imprimir(FILME *filme) {
 	}
 
 	printf("\n");
-	printf("sinopse: %s\n", filme->sinopse);
+	printf("sinopse: %s", filme->sinopse);
 }
 
 void filme_imprimir_lista(FILME *filme) {
-	printf("%s (%d), ", filme->nome, filme->ano);
+	printf("%s (%d) | ", filme->nome, filme->ano);
 	for(int i = 0; i < filme->n_generos; i++) {
 		printf("%s", filme->generos[i]);
 		if(i + 1 < filme->n_generos)

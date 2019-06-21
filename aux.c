@@ -44,27 +44,36 @@ int match(char **a, char **b, int na, int nb) {
 	int n_min = fmin(na, nb);
 
 	if(n_max == na) {
-		for(int i = 0; i < n_max; i++)
-			for(int j = 0; j < n_min; j++)
-				if(strcmp(a[i], b[j]) == 0) n++;
+		for(int i = 0; i < n_max; i++) {
+			for(int j = 0; j < n_min; j++) {
+				if(strcasecmp(a[i], b[j]) == 0) {
+					n++;
+					break;
+				}
+			}
+		}
 	} else if(n_max == nb) {
-		for(int i = 0; i < n_min; i++)
-			for(int j = 0; j < n_max; j++)
-				if(strcmp(a[i], b[j]) == 0) n++;
+		for(int i = 0; i < n_min; i++) {
+			for(int j = 0; j < n_max; j++) {
+				if(strcasecmp(a[i], b[j]) == 0) {
+					n++;
+					break;
+				}
+			}
+		}
 	}
 
 	return n;
 }
 
 int comparar_nome(const void *a, const void *b) {
-    return strcmp((char *) b, (char *) a);  
+	return strcasecmp((char *) a, (char *) b);  
 }
 
 int buscar(char *chave, int n, int ni, char v[][51]) {
 	return bsearch(chave, v, n, ni, comparar_nome) ? 1 : 0;
 }
 
-/*cuidado com o tipo na funcao*/
 double cosseno(int *u, int *v, int n){
 	int produto = 0; 
 	double norma_u = 0, norma_v = 0;
