@@ -6,6 +6,15 @@
 #include "interface.h"
 #include "aux.h"
 
+/*
+*	Struct FILME_PESOS
+*		double nome  :  resultado do cálculo dos pesos do nome do filme
+*  		double sinopse  :  resultado do cálculo dos pesos da sinopse do filme
+*  		double generos  :  resultado do cálculo dos pesos dos gêneros do filme
+*  		double ano  :  resultado do cálculo dos pesos do ano de lançamento do filme
+*		double media  :  media dos pesos
+*
+*/
 typedef struct pesos {
 	double nome;
 	double sinopse;
@@ -14,12 +23,27 @@ typedef struct pesos {
 	double media;
 } FILME_PESOS;
 
+/*
+*	Struct ARESTA
+*		unsigned vertice  :  vértice de "origem" da aresta
+*		FILME_PESOS *pesos  :  struct com os pesos calculados entre os dois vértices que a aresta liga
+*  		struct aresta *proximo  :  vértice na outra extremidade da aresta
+*
+*/
 typedef struct aresta {
 	unsigned vertice;
 	FILME_PESOS *pesos;
 	struct aresta *proximo;
 } ARESTA;
 
+/*
+*	Struct VERTICE
+*		FILME *filme  :  struct de um filme
+*		ARESTA *inicio  :  adjacentes ao vértice (relacionados)
+*  		unsigned n_relacionados  :  número de relacionados
+*  		unsigned n_relacionados_sinopse  :   número de relacionados pela sinopse
+*
+*/
 typedef struct vertice {
 	FILME *filme;
 	ARESTA *inicio;
@@ -27,12 +51,31 @@ typedef struct vertice {
 	unsigned n_relacionados_sinopse;
 } VERTICE;
 
+/*
+*	Struct GRAFO
+*		VERTICE *adj  :  vértice
+*		DICIONARIO *dicionario_sinopse  :  dicionário contendo as palavras armazenadas após a leitura das sinopses
+*  		unsigned n_vertices  :  número de vértices no grafo
+*
+*/
 struct grafo {
 	VERTICE *adj;
 	DICIONARIO *dicionario_sinopse;
 	unsigned n_vertices;
 };
 
+/*
+*  Função para calcular pesos entre dois vértices do grafo (armazenado na aresta)
+*
+*  Parâmetros: 
+*    GRAFO *grafo  :  grafo em questão
+*    VERTICE v1  :  vértice v1
+*    VERTICE v2  :  vértice v2
+*	 DICIONARIO *stopwords  :  dicionario de stopwords 
+* 
+*  Retorno:
+*   retorna um struct com os pesos que será a aresta entre os vértices v1 e v2
+*/
 FILME_PESOS *grafo_calcula_peso(GRAFO *grafo, VERTICE v1, VERTICE v2, DICIONARIO *stopwords){
 	FILME_PESOS *p = (FILME_PESOS *) malloc(sizeof(FILME_PESOS));
 	p->nome = filme_calcula_peso_nome(stopwords, v1.filme, v2.filme);
@@ -44,6 +87,14 @@ FILME_PESOS *grafo_calcula_peso(GRAFO *grafo, VERTICE v1, VERTICE v2, DICIONARIO
 	return p;
 }
 
+/*
+*  Função para adicionar um vértice no grafo 
+*
+*  Parâmetros: 
+*    GRAFO *grafo  :  grafo em questão
+*    FILME filme  :  filme a ser inserido
+* 
+*/
 void grafo_adicionar_vertice(GRAFO *grafo, FILME *filme) {
 	if(grafo) {
 		grafo->adj = realloc(grafo->adj, (grafo->n_vertices + 1) * sizeof(VERTICE));
@@ -57,6 +108,15 @@ void grafo_adicionar_vertice(GRAFO *grafo, FILME *filme) {
 	}
 }
 
+/*
+*  Função para calcular pesos das arestas entre o vértice de índice "iv" e os outros do grafo
+*
+*  Parâmetros: 
+*    GRAFO *grafo  :  grafo em questão
+*    int iv  :  índice do vértice
+*	 DICIONARIO *stopwords  :  dicionario de stopwords 
+* 
+*/
 void grafo_calcula_arestas(GRAFO *grafo, int iv, DICIONARIO *stopwords){
 	if(grafo) {
 		for(int i = 0; i < grafo->n_vertices; i++) {
@@ -85,6 +145,15 @@ void grafo_calcula_arestas(GRAFO *grafo, int iv, DICIONARIO *stopwords){
 	}
 }
 
+/*
+*  Função para imprimir na tela as informações de vértice de índice iv
+*
+*  Parâmetros: 
+*    GRAFO *grafo  :  grafo em questão
+*    VERTICE *vertice  :  vertice em questão
+*	 int peso_base  :  valor do peso que será comparado para ver se entra nas recomendações
+* 
+*/
 void grafo_imprimir_vertice(GRAFO *grafo, VERTICE *vertice, int peso_base) {
 	if(grafo) {
 		ARESTA *p = vertice->inicio;
@@ -109,6 +178,17 @@ void grafo_imprimir_vertice(GRAFO *grafo, VERTICE *vertice, int peso_base) {
 	}
 }
 
+/*
+*  Função para comparar dois nomes de vértices sem preocupação maiúscula ou minúscula (strcasecmp)
+*
+*  Parâmetros: 
+*    const void *a : nome a ser comparado
+*	 const void *b  :  nome a ser comparado
+*  Retorno:
+*  	 retorna: -1, caso 'a' entre primeiro pela ordem alfabética;
+*			  0, caso ambas sejam iguais;
+*    		  1, caso 'b' entre primeiro pela ordem alfabética;
+*/
 int grafo_comparar_vertice_nome(const void *a, const void *b) {
 	VERTICE *A = (VERTICE *) a;
 	VERTICE *B = (VERTICE *) b;
@@ -116,6 +196,16 @@ int grafo_comparar_vertice_nome(const void *a, const void *b) {
 	return strcasecmp(filme_nome(A->filme), filme_nome(B->filme));
 }
 
+/*
+*  Função para procurar um vértice de nome "nome" no grafo
+*
+*  Parâmetros: 
+*    GRAFO *grafo  :  grafo em questão
+*    char *nome  :  nome do vértice procurado
+* 
+*  Retorno:
+*    retorna o vértice desejado, caso o encontre
+*/
 VERTICE *grafo_buscar_vertice(GRAFO *grafo, char *nome) {
 	for(int i = 0; i < grafo->n_vertices; i++) {
 		if(comparar_nome(nome, filme_nome(grafo->adj[i].filme)) < 0)
@@ -127,6 +217,14 @@ VERTICE *grafo_buscar_vertice(GRAFO *grafo, char *nome) {
 	return NULL;
 }
 
+/*
+*  Função para imprimir na tela informações do filme de nome "nome" depois de uma busca pelo grafo
+*
+*  Parâmetros: 
+*    GRAFO *grafo  :  grafo em questão
+*    char *nome  :  nome do vértice procurado
+* 
+*/
 void grafo_buscar(GRAFO *grafo, char *nome) {
 	VERTICE *res = grafo_buscar_vertice(grafo, nome);
 
@@ -139,6 +237,15 @@ void grafo_buscar(GRAFO *grafo, char *nome) {
 	}
 }
 
+/*
+*  Função principal para o cálculo das recomendações entre os filmes
+*
+*  Parâmetros: 
+*    GRAFO *grafo  :  grafo em questão
+*    char *nome  :  nome do filme digitado pelo usuário
+*	 int peso_base  :  valor do peso que será comparado para ver se entra nas recomendações
+*
+*/
 void grafo_recomendar(GRAFO *grafo, char *nome, int peso_base) {
 	VERTICE *res = grafo_buscar_vertice(grafo, nome);
 
@@ -155,6 +262,15 @@ void grafo_recomendar(GRAFO *grafo, char *nome, int peso_base) {
 	}
 }
 
+/*
+*  Função para inicializar e fazer alocação dinâmica para um grafo
+*
+*  Parâmetros: 
+*    FILE *arquivo  :  ponteiro do arquivo
+* 
+*  Retorno:
+*   retorna um grafo inicializado
+*/
 GRAFO *grafo_criar(FILE *arquivo) {
 	GRAFO *grafo = (GRAFO *) malloc(sizeof(GRAFO));
 	grafo->dicionario_sinopse = dicionario_criar();
@@ -182,6 +298,13 @@ GRAFO *grafo_criar(FILE *arquivo) {
 	return grafo;
 }
 
+/*
+*  Função que libera memória dinamicamente alocada para grafo
+*
+*  Parâmetros: 
+*    GRAFO *grafo  :  grafo a ter memória liberada
+*   
+*/
 void grafo_liberar(GRAFO *grafo) {
 	for(int i = 0; i < grafo->n_vertices; i++) {
 		filme_liberar(grafo->adj[i].filme);
@@ -199,6 +322,13 @@ void grafo_liberar(GRAFO *grafo) {
 	free(grafo);
 }
 
+/*
+*  Função que imprime na tela os vértices do grafo que são filmes 
+*
+*  Parâmetros: 
+*    GRAFO *grafo  :  grafo em questão
+*   
+*/
 void grafo_imprimir_filmes(GRAFO *grafo) {
 	printf("\n");
 

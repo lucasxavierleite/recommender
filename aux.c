@@ -5,6 +5,7 @@
 #include <math.h>
 #include "aux.h"
 
+// vetor com as stopwords (palavras consideradas irrelevantes para o conjunto de resultados a ser exibido)
 char **vetor_stopwords_global = (char *[]) { "a", "ao", "aos", "aquela", "aquelas",
 	"aquele", "aqueles", "aquilo", "as", "até", "com", "como", "da", "das", "de",
 	"dela", "delas", "dele", "deles", "depois", "do", "dos", "e", "ela", "elas",
@@ -33,6 +34,13 @@ char **vetor_stopwords_global = (char *[]) { "a", "ao", "aos", "aquela", "aquela
 	"tivéssemos", "tu", "tua", "tuas", "tém", "têm", "tínhamos", "um", "uma",
 	"você", "vocês", "vos", "à", "às", "é", "éramos" };
 
+/*
+*  Função para a retirada de espaços brancos antes e depois de uma string
+*
+*  Parâmetros: 
+*    char *str : string a ter espaços, no início e no fim, removidos
+*
+*/
 void trim(char *str) {
 	if(!isspace(*str) && !isspace(*(str + strlen(str) - 1)))
 		return;
@@ -47,6 +55,15 @@ void trim(char *str) {
 	strcpy(str, beg);
 }
 
+/*
+*  Função para extrair palavras de um texto
+*
+*  Parâmetros: 
+*    char *str : string com as palavras e delimitadores 
+*	 char **v  :  vetor de palavras extraidas do texto
+*    int *n  :  número de palavras 
+*    char *delim  :  string com os caracteres delimitadores 
+*/
 char **tokenize(char *str, int *n, char *delim) {
 	*n = 0;
 
@@ -66,6 +83,18 @@ char **tokenize(char *str, int *n, char *delim) {
 	return v;
 }
 
+/*
+*  Função para extrair palavras de um texto, nesse caso, do vetor de stopwords
+*
+*  Parâmetros: 
+*    char *str : vetor de stopwords
+*    int *n  :  número de correspondências
+*    char *delim  :  string com os caracteres delimitadores
+*    DICIONARIO *d  :  dicionario das stopwords
+*
+*  Retorno:
+*    retorna um vetor de strings contendo as stopwords "trimadas"
+*/
 char **tokenize_stopwords(char *str, int *n, char *delim, DICIONARIO *d) {
 	*n = 0;
 
@@ -88,6 +117,18 @@ char **tokenize_stopwords(char *str, int *n, char *delim, DICIONARIO *d) {
 	return v;
 }
 
+/*
+*  Função que calcula o número de correspondências entre dois vetores de palavras
+*
+*  Parâmetros: 
+*    char **a : vetor de palavras
+*	 char **b  :  vetor de palavras
+*    int na  :  tamanho do vetor "a"
+*    int nb  :  tamanho do vetor "b"
+*
+*  Retorno:
+*  	 retorna o número de correspondências
+*/
 int match(char **a, char **b, int na, int nb) {
 	int n = 0;
 	int n_max = fmax(na, nb);
@@ -116,16 +157,52 @@ int match(char **a, char **b, int na, int nb) {
 	return n;
 }
 
+/*
+*  Função para comparar dois nomes sem preocupação maiúscula ou minúscula (strcasecmp)
+*
+*  Parâmetros: 
+*    const void *a : nome à ser comparado
+*	 const void *b  :  nome à ser comparado
+*
+*  Retorno:
+*  	 retorna: -1, caso 'a' entre primeiro pela ordem alfabética;
+*			  0, caso ambas sejam iguais;
+*    		  1, caso 'b' entre primeiro pela ordem alfabética;
+*/
 int comparar_nome(const void *a, const void *b) {
 	for(int i = 0; i < strlen((char *) a); i++)
 
 	return strcasecmp((char *) a, (char *) b);  
 }
 
+/*
+*  Função para busca binária de uma chave dentro de um vetor de strings ordenado
+*
+*  Parâmetros: 
+*    char *chave : chave buscada
+*    int *n  :  número de palavras
+*    int ni  :  tamanho máximo das palavras
+*    char v[][51]  :  vetor de strings
+*
+*  Retorno:
+*    retorna 1, caso chave se encontre no vetor de strings;
+*		     0, caso chave não se encontre no vetor de strings;
+*/
 int buscar(char *chave, int n, int ni, char v[][51]) {
 	return bsearch(chave, v, n, ni, comparar_nome) ? 1 : 0;
 }
 
+/*
+*  Função que calcula o cosseno entre dois vetores
+*
+*  Parâmetros: 
+*    int *u  :  primeiro vetor
+*	 int *v  :  segundo vetor
+*    int n  :  tamanhos dos vetores
+*  
+*  Retorno:
+*    retorna o cosseno entre u e v
+*/
 double cosseno(int *u, int *v, int n){
 	int produto = 0; 
 	double norma_u = 0, norma_v = 0;
