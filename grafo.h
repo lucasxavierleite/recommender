@@ -9,6 +9,8 @@
 
 #define RECOMENDACAO_SINOPSE 0
 #define RECOMENDACAO_GERAL 1
+#define RECOMENDACAO_NAO_RELACIONADOS 2
+#define RECOMENDACAO_GENERO 3
 
 typedef struct grafo GRAFO;
 
@@ -17,6 +19,6 @@ void grafo_liberar(GRAFO *grafo);
 void grafo_imprimir_filmes(GRAFO *grafo);
 void grafo_buscar(GRAFO *grafo, char *nome);
 void grafo_recomendar(GRAFO *grafo, char *nome, int peso_base);
+void grafo_imprimir_filmes_genero	(GRAFO* grafo, char* genero);
 
 #endif
-

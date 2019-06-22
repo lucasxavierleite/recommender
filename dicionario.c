@@ -5,12 +5,13 @@
 #include <stdio.h>
 
 /*
-*	Struct DICIONARIO
-*		char **palavras  :  vetor de strings (palavras do dicionário)
-*		unsigned n_palavras  :  número total de palavras no dicionário
-*  		unsigned ordenado  :  flag para indicar se dicionario esta ordenado ou não
+*  Struct DICIONARIO
+*    char **palavras  :  vetor de strings (palavras do dicionário)
+*    unsigned n_palavras  :  número total de palavras no dicionário
+*      unsigned ordenado  :  flag para indicar se dicionario esta ordenado ou não
 *
 */
+
 struct dicionario {
 	char **palavras;
 	unsigned n_palavras;
@@ -23,6 +24,7 @@ struct dicionario {
 *  Retorno:
 *    retorna um dicionário inicializado
 */
+
 DICIONARIO *dicionario_criar() {
 	DICIONARIO *d = (DICIONARIO *) malloc(sizeof(DICIONARIO));
 
@@ -40,11 +42,12 @@ DICIONARIO *dicionario_criar() {
 *
 *  Parâmetros: 
 *    char **v  :  vetor de strings
-*	 int n  :  número de palavras 
+*    int n  :  número de palavras 
 *  
 *  Retorno:
 *    retorna um dicionário de palavras
 */
+
 DICIONARIO *dicionario_criar_vetor(char **v, int n) {
 	DICIONARIO *d = (DICIONARIO *) malloc(sizeof(DICIONARIO));
 
@@ -68,6 +71,7 @@ DICIONARIO *dicionario_criar_vetor(char **v, int n) {
 *    DICIONARIO *d  :  dicionário que será ordenado
 *    
 */
+
 void dicionario_ordenar(DICIONARIO *d) {
 	qsort(d->palavras, d->n_palavras, sizeof(d->palavras[0]), comparar_nome);
 	d->ordenado = 1;
@@ -81,8 +85,9 @@ void dicionario_ordenar(DICIONARIO *d) {
 *    char *nome  :  palavra à ser buscada
 *  Retorno:
 *    retorna 1, caso chave se encontre no vetor de strings;
-*		     0, caso chave não se encontre no vetor de strings;
+*            0, caso chave não se encontre no vetor de strings;
 */
+
 int dicionario_contem(DICIONARIO *d, char *nome) {
 	if(!d->ordenado)
 		dicionario_ordenar(d);
@@ -94,9 +99,10 @@ int dicionario_contem(DICIONARIO *d, char *nome) {
 *
 *  Parâmetros: 
 *    DICIONARIO *d  :  dicionário que receberá novo nome
-*	 char *nome  : nome a ser inserido no dicionário
-*    
+*    char *nome  : nome a ser inserido no dicionário
+*
 */
+
 void dicionario_inserir(DICIONARIO *d, char *nome) {
 	if(!dicionario_contem(d, nome)) {
 		d->palavras = realloc(d->palavras, sizeof(char *) * (d->n_palavras + 1));
@@ -112,11 +118,12 @@ void dicionario_inserir(DICIONARIO *d, char *nome) {
 *
 *  Parâmetros: 
 *    DICIONARIO *d  :  dicionário em questão
-*  	 int i  :  posição da palavra
+*    int i  :  posição da palavra
 *
 *  Retorno:
 *    retorna a palavra da posição de número i
 */
+
 char *dicionario_buscar_pos(DICIONARIO *d, int i) {
 	char *str = (char *) malloc(sizeof(char) * (strlen(d->palavras[i] + 1)));
 	strcpy(str, d->palavras[i]);
@@ -132,12 +139,13 @@ char *dicionario_buscar_pos(DICIONARIO *d, int i) {
 *  Retorno:
 *    retorna o numero de palavras presentes no dicionário
 */
+
 int dicionario_numero_palavras(DICIONARIO *d) {
 	return d->n_palavras;
 }
 
 /*
-*  Função que retorna as palavras no dicionário
+*  Função que retorna as palavras no dicionário como um vetor
 *
 *  Parâmetros: 
 *    DICIONARIO *d  :  dicionário em questão
@@ -145,6 +153,7 @@ int dicionario_numero_palavras(DICIONARIO *d) {
 *  Retorno:
 *    retorna vetor de strings
 */
+
 char **dicionario_para_vetor(DICIONARIO *d) {
 	return d->palavras;
 }

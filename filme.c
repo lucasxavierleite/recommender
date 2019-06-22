@@ -8,14 +8,15 @@
 #include "interface.h"
 
 /*
-*	Struct FILME
-*		char *nome  :  nome do filme
-*		unsigned n_generos  :  número de gêneros
-*  		char **generos  :  vetor de strings (gêneros do filme)
-*  		char *sinopse  :  sinopse do filme
-*  		unsigned ano  :  ano de lançamento do filme
+*  Struct FILME
+*    char *nome  :  nome do filme
+*    unsigned n_generos  :  número de gêneros
+*      char **generos  :  vetor de strings (gêneros do filme)
+*      char *sinopse  :  sinopse do filme
+*      unsigned ano  :  ano de lançamento do filme
 *
 */
+
 struct filme {
 	char *nome;
 	unsigned n_generos;
@@ -23,6 +24,14 @@ struct filme {
 	char *sinopse;
 	unsigned ano;
 };
+
+unsigned filme_n_generos(FILME* f){
+	return f->n_generos;
+}
+
+char** filme_generos(FILME* f){
+	return f->generos;
+}
 
 /*
 *  Função que inicializa e faz alocação dinâmica para um filme 
@@ -36,6 +45,7 @@ struct filme {
 *  Retorno:
 *    retorna o FILME inicializado com as suas devidas informações 
 */
+
 FILME *filme_criar(char *nome, int ano, char *generos, char *sinopse) {
 	FILME *filme = (FILME *) malloc(sizeof(FILME));
 
@@ -60,6 +70,7 @@ FILME *filme_criar(char *nome, int ano, char *generos, char *sinopse) {
 *  Retorno:
 *    retorna uma struct FILME inicializada e deidamente alocada
 */
+
 FILME *filme_ler_arquivo(FILE *arquivo, DICIONARIO *dicionario_sinopse, DICIONARIO *stopwords) {
 	char lixo[50];
 	char nome[100];
@@ -75,7 +86,7 @@ FILME *filme_ler_arquivo(FILE *arquivo, DICIONARIO *dicionario_sinopse, DICIONAR
 	int nv = 0;
 	char sinopse_cp[strlen(sinopse)];
 	strcpy(sinopse_cp, sinopse);
-	
+
 	char **v = tokenize_stopwords(sinopse_cp, &nv, NAO_ALFA, stopwords);
 
 	for(int i = 0; i < nv; i++) {
@@ -96,7 +107,8 @@ FILME *filme_ler_arquivo(FILE *arquivo, DICIONARIO *dicionario_sinopse, DICIONAR
 *  Retorno:
 *    retorna cálculo da semelhança entre dois filmes com base em seus nomes
 */
-double filme_calcula_peso_nome(DICIONARIO* stopwords, FILME *f1, FILME *f2) {	
+
+double filme_calcula_peso_nome(DICIONARIO* stopwords, FILME *f1, FILME *f2) {
 	int nv1 = 0, nv2 = 0;
 
 	char f1_cp[strlen(f1->nome)];
@@ -108,11 +120,10 @@ double filme_calcula_peso_nome(DICIONARIO* stopwords, FILME *f1, FILME *f2) {
 	char **v2 = tokenize_stopwords(f2_cp, &nv2, NAO_ALFA, stopwords);
 
 	int correspondencias = match(v1, v2, nv1, nv2);
-	
+
 	return (double) correspondencias / (double) fmax(nv1, nv2);
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
 *  Função para calcular o peso entre os anos de lançamento de f1 e f2 
 *
@@ -123,8 +134,9 @@ double filme_calcula_peso_nome(DICIONARIO* stopwords, FILME *f1, FILME *f2) {
 *  Retorno:
 *    retorna cálculo da semelhança entre dois filmes com base em seus anos de lançamento
 */
+
 double filme_calcula_peso_ano(FILME *f1, FILME *f2) {
-	return 1 / (fabs((int) f1->ano - (int) f2->ano) / RELACAO_MAXIMA_ANO + 1); 
+	return 1 / (fabs((int) f1->ano - (int) f2->ano) / RELACAO_MAXIMA_ANO + 1);
 }
 
 /*
@@ -137,6 +149,7 @@ double filme_calcula_peso_ano(FILME *f1, FILME *f2) {
 *  Retorno:
 *   retorna a divisão do número de palavras correspondentes entre os vetores de gêneros dos filmes pelo total de palavras nos dois vetores
 */
+
 double filme_calcula_peso_generos(FILME *f1, FILME *f2) {
 	int correspondencias = match(f1->generos, f2->generos, f1->n_generos, f2->n_generos);
 	return (double) correspondencias / (double) fmax(f1->n_generos, f2->n_generos);
@@ -154,6 +167,7 @@ double filme_calcula_peso_generos(FILME *f1, FILME *f2) {
 *  Retorno:
 *    retorna cálculo da semelhança entre dois filmes com base em suas sinopses 
 */
+
 double filme_calcula_peso_sinopse(DICIONARIO *d, DICIONARIO *stopwords, FILME *f1, FILME *f2) {
 	/* Vetores binários (1 = contém, 0 = não contém) */
 	unsigned correspondencias1[dicionario_numero_palavras(d)];
@@ -203,6 +217,7 @@ double filme_calcula_peso_sinopse(DICIONARIO *d, DICIONARIO *stopwords, FILME *f
 *  Retorno:
 *    string com o nome do filme em questão
 */
+
 char *filme_nome(FILME *filme){
 	return filme->nome;
 }
@@ -214,12 +229,13 @@ char *filme_nome(FILME *filme){
 *    FILME *filme  :  filme a ter memória liberada
 *    
 */
+
 void filme_liberar(FILME *filme) {
 	free(filme->nome);
-	
+
 	for(int i = 0; i < filme->n_generos; i++)
 		free(filme->generos[i]);
-	
+
 	free(filme->generos);
 	free(filme->sinopse);
 	free(filme);
@@ -232,6 +248,7 @@ void filme_liberar(FILME *filme) {
 *    FILME *filme  :  filme que se deseja imprimir as informações na tela 
 *    
 */
+
 void filme_imprimir(FILME *filme) {
 	printf(ANSI_COR_PRETO_BRILHANTE "nome: %s\n", filme->nome);
 	printf("ano: %d\n", filme->ano);
@@ -254,6 +271,7 @@ void filme_imprimir(FILME *filme) {
 *    FILME *filme  :  filme em questão
 *    
 */
+
 void filme_imprimir_lista(FILME *filme) {
 	printf(ANSI_COR_PRETO_BRILHANTE "%s (%d) | ", filme->nome, filme->ano);
 	for(int i = 0; i < filme->n_generos; i++) {

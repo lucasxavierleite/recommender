@@ -17,5 +17,7 @@ double filme_calcula_peso_ano(FILME *f1, FILME *f2);
 double filme_calcula_peso_generos(FILME *f1, FILME *f2);
 double filme_calcula_peso_sinopse(DICIONARIO *d, DICIONARIO *stopwords, FILME *f1, FILME *f2);
 char *filme_nome(FILME *filme);
+unsigned filme_n_generos(FILME* f);
+char** filme_generos(FILME* f);
 
 #endif

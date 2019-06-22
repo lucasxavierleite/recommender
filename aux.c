@@ -5,7 +5,8 @@
 #include <math.h>
 #include "aux.h"
 
-// vetor com as stopwords (palavras consideradas irrelevantes para o conjunto de resultados a ser exibido)
+/* Vetor de stopwords (palavras consideradas irrelevantes) */
+
 char **vetor_stopwords_global = (char *[]) { "a", "ao", "aos", "aquela", "aquelas",
 	"aquele", "aqueles", "aquilo", "as", "até", "com", "como", "da", "das", "de",
 	"dela", "delas", "dele", "deles", "depois", "do", "dos", "e", "ela", "elas",
@@ -35,12 +36,12 @@ char **vetor_stopwords_global = (char *[]) { "a", "ao", "aos", "aquela", "aquela
 	"você", "vocês", "vos", "à", "às", "é", "éramos" };
 
 /*
-*  Função para a retirada de espaços brancos antes e depois de uma string
+*  Remove os espaços em branco antes e depois de uma string
 *
 *  Parâmetros: 
-*    char *str : string a ter espaços, no início e no fim, removidos
-*
+*    char *str : string a ter espaços do início e fim removidos
 */
+
 void trim(char *str) {
 	if(!isspace(*str) && !isspace(*(str + strlen(str) - 1)))
 		return;
@@ -56,20 +57,24 @@ void trim(char *str) {
 }
 
 /*
-*  Função para extrair palavras de um texto
+*  Extrai as palavras de um texto, com base no delimitador especificado
 *
 *  Parâmetros: 
 *    char *str : string com as palavras e delimitadores 
-*	 char **v  :  vetor de palavras extraidas do texto
+*    char **v  :  vetor de palavras extraidas do texto
 *    int *n  :  número de palavras 
-*    char *delim  :  string com os caracteres delimitadores 
+*    char *delim  :  string com os caracteres delimitadores
+*
+*  Retorno:
+*    Vetor de strings (palavras do texto)
 */
+
 char **tokenize(char *str, int *n, char *delim) {
 	*n = 0;
 
 	char **v = NULL;
 	char *token = strtok(str, delim);
-	
+
 	while(token) {
 		v = (char **) realloc(v, sizeof(char *) * (*n+1));
 		// v[*n] = (char *) malloc(sizeof(char) * (strlen(token) + 1));
@@ -84,23 +89,25 @@ char **tokenize(char *str, int *n, char *delim) {
 }
 
 /*
-*  Função para extrair palavras de um texto, nesse caso, do vetor de stopwords
+*  Extrai as palavras de um texto, com base no delimitador especificado, ignorando
+*  as palavras contidas no dicionario passado como parâmetro (stopwords)
 *
 *  Parâmetros: 
-*    char *str : vetor de stopwords
-*    int *n  :  número de correspondências
-*    char *delim  :  string com os caracteres delimitadores
-*    DICIONARIO *d  :  dicionario das stopwords
+*    char *str     : vetor de stopwords
+*    int *n        :  número de correspondências
+*    char *delim   :  string com os caracteres delimitadores
+*    DICIONARIO *d : dicionario de palavras a serem ignoradas
 *
 *  Retorno:
-*    retorna um vetor de strings contendo as stopwords "trimadas"
+*    Vetor de strings (palavras do texto) que não estão contidas no dicionário
 */
+
 char **tokenize_stopwords(char *str, int *n, char *delim, DICIONARIO *d) {
 	*n = 0;
 
 	char **v = NULL;
 	char *token = strtok(str, delim);
-	
+
 	while(token) {
 		v = (char **) realloc(v, sizeof(char *) * (*n+1));
 		// v[*n] = (char *) malloc(sizeof(char) * (strlen(token) + 1));
@@ -118,17 +125,18 @@ char **tokenize_stopwords(char *str, int *n, char *delim, DICIONARIO *d) {
 }
 
 /*
-*  Função que calcula o número de correspondências entre dois vetores de palavras
+*  Calcula o número de correspondências entre dois vetores de strings
 *
 *  Parâmetros: 
 *    char **a : vetor de palavras
-*	 char **b  :  vetor de palavras
-*    int na  :  tamanho do vetor "a"
-*    int nb  :  tamanho do vetor "b"
+*    char **b  :  vetor de palavras
+*    int na  :  tamanho do vetor a
+*    int nb  :  tamanho do vetor b
 *
 *  Retorno:
-*  	 retorna o número de correspondências
+*    Número de correspondências
 */
+
 int match(char **a, char **b, int na, int nb) {
 	int n = 0;
 	int n_max = fmax(na, nb);
@@ -158,36 +166,38 @@ int match(char **a, char **b, int na, int nb) {
 }
 
 /*
-*  Função para comparar dois nomes sem preocupação maiúscula ou minúscula (strcasecmp)
+*  Compara duas strings (case insensitive)
 *
 *  Parâmetros: 
-*    const void *a : nome à ser comparado
-*	 const void *b  :  nome à ser comparado
+*    const void *a : ponteiro genérico para a primeira string a ser comparada
+*    const void *b : ponteiro genérico para a segunda string a ser comparada
 *
 *  Retorno:
-*  	 retorna: -1, caso 'a' entre primeiro pela ordem alfabética;
-*			  0, caso ambas sejam iguais;
-*    		  1, caso 'b' entre primeiro pela ordem alfabética;
+*   Inteiro < 0, caso 'a' entre primeiro pela ordem alfabética;
+*           = 0, caso 'a' e 'b' sejam iguais
+*           > 0, caso 'b' entre primeiro pela ordem alfabética;
 */
+
 int comparar_nome(const void *a, const void *b) {
 	for(int i = 0; i < strlen((char *) a); i++)
 
-	return strcasecmp((char *) a, (char *) b);  
+	return strcasecmp((char *) a, (char *) b);
 }
 
 /*
 *  Função para busca binária de uma chave dentro de um vetor de strings ordenado
 *
 *  Parâmetros: 
-*    char *chave : chave buscada
-*    int *n  :  número de palavras
-*    int ni  :  tamanho máximo das palavras
+*    char *chave   : chave buscada
+*    int *n        :  número de palavras
+*    int ni        :  tamanho máximo das palavras
 *    char v[][51]  :  vetor de strings
 *
 *  Retorno:
-*    retorna 1, caso chave se encontre no vetor de strings;
-*		     0, caso chave não se encontre no vetor de strings;
+*    Inteiro = 1, caso a chave se encontre no vetor de strings
+*            = 0, caso a chave não se encontre no vetor de strings
 */
+
 int buscar(char *chave, int n, int ni, char v[][51]) {
 	return bsearch(chave, v, n, ni, comparar_nome) ? 1 : 0;
 }
@@ -196,25 +206,26 @@ int buscar(char *chave, int n, int ni, char v[][51]) {
 *  Função que calcula o cosseno entre dois vetores
 *
 *  Parâmetros: 
-*    int *u  :  primeiro vetor
-*	 int *v  :  segundo vetor
-*    int n  :  tamanhos dos vetores
+*    int *u : primeiro vetor
+*	 int *v : segundo vetor
+*    int n  : tamanhos dos vetores u e v
 *  
 *  Retorno:
-*    retorna o cosseno entre u e v
+*    Cosseno entre u e v
 */
+
 double cosseno(int *u, int *v, int n){
-	int produto = 0; 
+	int produto = 0;
 	double norma_u = 0, norma_v = 0;
-	
+
 	for(int i = 0; i < n; i++){
 		produto += u[i] * v[i];
 		norma_u += pow(u[i], 2);
 		norma_v += pow(v[i], 2);
 	}
-	
+
 	norma_u = sqrt(norma_u);
 	norma_v = sqrt(norma_v);
-	
+
 	return (double) produto / (norma_u * norma_v);
 }

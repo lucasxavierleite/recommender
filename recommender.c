@@ -31,13 +31,21 @@ int main(int argc, char *argv[]) {
 				menu_ler_titulo(nome_filme);
 				grafo_buscar(grafo, nome_filme);
 				break;
-			case MENU_RECOMENDAR_FILME_SINOPSE:
+			case MENU_RECOMENDAR_FILMES:
+				menu_ler_titulo(nome_filme);
+				grafo_recomendar(grafo, nome_filme, RECOMENDACAO_GERAL);
+				break;
+			case MENU_RECOMENDAR_FILMES_SINOPSE:
 				menu_ler_titulo(nome_filme);
 				grafo_recomendar(grafo, nome_filme, RECOMENDACAO_SINOPSE);
 				break;
-			case MENU_RECOMENDAR_FILME:
+			case MENU_RECOMENDAR_FILMES_POR_GENERO:
 				menu_ler_titulo(nome_filme);
-				grafo_recomendar(grafo, nome_filme, RECOMENDACAO_GERAL);
+				grafo_imprimir_filmes_genero(grafo, nome_filme);
+				break;
+			case MENU_RECOMENDAR_FILMES_NAO_RELACIONADOS:
+				menu_ler_titulo(nome_filme);
+				grafo_recomendar(grafo, nome_filme, RECOMENDACAO_NAO_RELACIONADOS);
 				break;
 		}
 	}
