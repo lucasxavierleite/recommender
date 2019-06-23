@@ -57,3 +57,68 @@ nome: Vingadores: Guerra Infinita
 ano: 2018
 categoria: Aventura, Ação
 sinopse: Thanos (Josh Brolin) enfim chega à Terra, disposto a reunir as Joias do Infinito. Para enfrentá-lo, os Vingadores precisam unir forças com os Guardiões da Galáxia, ao mesmo tempo em que lidam com desavenças entre alguns de seus integrantes.
+
+nome: A Mula
+ano: 2019
+categoria: Drama, Biografia
+sinopse: Leo Sharp coleciona uma série de honras que vão desde de prêmios por seus trabalhos como paisagista e decorador até o reconhecimento por ter lutado contra os nazistas durante a Segunda Guerra Mundial. No entanto, foi aos 90 anos que conquistou algo surpreendente: ele foi preso por portar o equivalente a três milhões de dólares em cocaína no seu carro, uma picape velha, no Michigan. Sharp era o líder do Sinaloa, um cartel de drogas no México e foi sentenciado à três anos de cadeia. A sinopse oficial ainda não foi divulgada.
+
+nome: Avatar
+ano: 2009
+categoria: Ficção científica, Aventura
+sinopse: Jake Sully (Sam Worthington) ficou paraplégico após um combate na Terra. Ele é selecionado para participar do programa Avatar em substituição ao seu irmão gêmeo, falecido. Jake viaja a Pandora, uma lua extraterrestre, onde encontra diversas e estranhas formas de vida. O local é também o lar dos Na'Vi, seres humanóides que, apesar de primitivos, possuem maior capacidade física que os humanos. Os Na'Vi têm três metros de altura, pele azulada e vivem em paz com a natureza de Pandora. Os humanos desejam explorar a lua, de forma a encontrar metais valiosos, o que faz com que os Na'Vi aperfeiçoem suas habilidades guerreiras. Como são incapazes de respirar o ar de Pandora, os humanos criam seres híbridos chamados de Avatar. Eles são controlados por seres humanos, através de uma tecnologia que permite que seus pensamentos sejam aplicados no corpo do Avatar. Desta forma Jake pode novamente voltar à ativa, com seu Avatar percorrendo as florestas de Pandora e liderando soldados. Até conhecer Neytiri (Zoe Saldana), uma feroz Na'Vi que conhece acidentalmente e que serve de tutora para sua ambientação na civilização alienígena.
+
+nome: SEVEN - OS SETE CRIMES CAPITAIS
+ano: 1995
+categoria: Policial, Suspense
+sinopse: Dois policiais, om jovem e impetuoso David Mills (Brad Pitt) e o outro maduro e prestes a se aposentar, William Somerset (Morgan Freeman), são encarregados de uma periogosa investigação: encontrar um serial killer que mata as pessoas seguindo a ordem dos sete pecados capitais.
+
+nome: Sepultura Endurance
+ano: 2017
+categoria: Documentário
+sinopse: Criada em plenos anos 1980, no cenário underground do metal em Belo Horizonte, a banda Sepultura nasceu a partir dos irmãos Max e Iggor Cavallera para, após a entrada do guitarrista Andreas Kisser, alcançar popularidade mundial. O documentário acompanha a jornada da banda ao longo de seus 30 anos de vida, retratando os discos mais emblemáticos e as mudanças provocadas devido à saída, em momentos distintos, de seus músicos fundadores.
+
+nome: O Silêncio dos Inocentes
+ano: 1991
+categoria: Suspense
+sinopse: A agente do FBI, Clarice Starling (Jodie Foster) é ordenada a encontrar um assassino que arranca a pele de suas vítimas. Para entender como ele pensa, ela procura o periogoso psicopata, Hannibal Lecter (Anthony Hopkins), encarcerado sob a acusação de canibalismo.
+
+nome: Um Lugar Silencioso
+ano: 2018
+categoria: Suspense, Terror
+sinopse: Em uma fazenda dos Estados Unidos, uma família do meio-oeste é perseguida por uma entidade fantasmagórica assustadora. Para se protegerem, eles devem permanecer em silêncio absoluto, a qualquer custo, pois o perigo é ativado pela percepção do som.
+
+nome: Tenacious D - Uma Dupla Infernal
+ano: 2006
+categoria: Comédia, Musical
+sinopse: Esta é a história de uma amizade que mudou o curso da história do Rock n' Roll para sempre. O ingênuo JB (Jack Black) se une ao relaxado KG (Kyle Gass) para formar a banda Tenacious D. Eles pretendem escrever seus nomes na história da música, mas logo percebem que isso não é tão simples assim. A dupla irá armar um plano infalível para roubar uma palheta mágica capaz de solucionar qualquer problema.
+
+nome: Shazam!
+ano: 2019
+categoria: Ação, Fantasia
+sinopse: Billy Batson (Asher Angel) tem apenas 14 anos de idade, mas recebeu de um antigo mago o dom de se transformar num super-herói adulto chamado Shazam (Zachary Levi). Ao gritar a palavra SHAZAM!, o adolescente se transforma nessa sua poderosa versão adulta para se divertir e testar suas habilidades. Contudo, ele precisa aprender a controlar seus poderes para enfrentar o malvado Dr. Thaddeus Sivana (Mark Strong).
+
+nome: Bastardos Inglórios
+ano: 2009
+categoria: Guerra, Ação
+sinopse: 2ª Guerra Mundial. A França está ocupada pelos nazistas. O tenente Aldo Raine (Brad Pitt) é o encarregado de reunir um pelotão de soldados de origem judaica, com o objetivo de realizar uma missão suicida contra os alemães. O objetivo é matar o maior número possível de nazistas, da forma mais cruel possível. Paralelamente Shosanna Dreyfuss (Mélanie Laurent) assiste a execução de sua família pelas mãos do coronel Hans Landa (Christoph Waltz), o que faz com que fuja para Paris. Lá ela se disfarça como operadora e dona de um cinema local, enquanto planeja um meio de se vingar.
+
+nome: O Lobo de Wall Street
+ano: 2014
+categoria: Biografia, Drama
+sinopse: Durante seis meses, Jordan Belfort (Leonardo DiCaprio) trabalhou duro em uma corretora de Wall Street, seguindo os ensinamentos de seu mentor Mark Hanna (Matthew McConaughey). Quando finalmente consegue ser contratado como corretor da firma, acontece o Black Monday, que faz com que as bolsas de vários países caiam repentinamente. Sem emprego e bastante ambicioso, ele acaba trabalhando para uma empresa de fundo de quintal que lida com papéis de baixo valor, que não estão na bolsa de valores. É lá que Belfort tem a ideia de montar uma empresa focada neste tipo de negócio, cujas vendas são de valores mais baixos mas, em compensação, o retorno para o corretor é bem mais vantajoso. Ao lado de Donnie (Jonah Hill) e outros amigos dos velhos tempos, ele cria a Stratton Oakmont, uma empresa que faz com que todos enriqueçam rapidamente e, também, levem uma vida dedicada ao prazer.
+
+nome: A Grande Aposta
+ano: 2016
+categoria: Drama, Comédia , Biografia
+sinopse: Michael Burry (Christian Bale) é o dono de uma empresa de médio porte, que decide investir muito dinheiro do fundo que coordena ao apostar que o sistema imobiliário nos Estados Unidos irá quebrar em breve. Tal decisão gera complicações junto aos investidores, já que nunca antes alguém havia apostado contra o sistema e levado vantagem. Ao saber destes investimentos, o corretor Jared Vennett (Ryan Gosling) percebe a oportunidade e passa a oferecê-la a seus clientes. Um deles é Mark Baum (Steve Carell), o dono de uma corretora que enfrenta problemas pessoais desde que seu irmão se suicidou. Paralelamente, dois iniciantes na Bolsa de Valores percebem que podem ganhar muito dinheiro ao apostar na crise imobiliária e, para tanto, pedem ajuda a um guru de Wall Street, Ben Rickert (Brad Pitt), que vive recluso.
+
+nome: Blade Runner, O Caçador de Andróides
+ano: 1982
+categoria: Ficção científica
+sinopse: No início do século XXI, uma grande corporação desenvolve um robô que é mais forte e ágil que o ser humano e se equiparando em inteligência. São conhecidos como replicantes e utilizados como escravos na colonização e exploração de outros planetas. Mas, quando um grupo dos robôs mais evoluídos provoca um motim, em uma colônia fora da Terra, este incidente faz os replicantes serem considerados ilegais na Terra, sob pena de morte. A partir de então, policiais de um esquadrão de elite, conhecidos como Blade Runner, têm ordem de atirar para matar em replicantes encontrados na Terra, mas tal ato não é chamado de execução e sim de remoção. Até que, em novembro de 2019, em Los Angeles, quando cinco replicantes chegam à Terra, um ex-Blade Runner (Harrison Ford) é encarregado de caçá-los.
+
+nome: Whiplash - Em Busca da Perfeição
+ano: 2015
+categoria: Drama, Musical
+sinopse: O solitário Andrew (Miles Teller) é um jovem baterista que sonha em ser o melhor de sua geração e marcar seu nome na música americana como fez Buddy Rich, seu maior ídolo na bateria. Após chamar a atenção do reverenciado e impiedoso mestre do jazz Terence Fletcher (JK Simmons), Andrew entra para a orquestra principal do conservatório de Shaffer, a melhor escola de música dos Estados Unidos. Entretanto, a convivência com o abusivo maestro fará Andrew transformar seu sonho em obsessão, fazendo de tudo para chegar a um novo nível como músico, mesmo que isso coloque em risco seus relacionamentos com sua namorada e sua saúde física e mental.
