@@ -122,3 +122,28 @@ nome: Whiplash - Em Busca da Perfeição
 ano: 2015
 categoria: Drama, Musical
 sinopse: O solitário Andrew (Miles Teller) é um jovem baterista que sonha em ser o melhor de sua geração e marcar seu nome na música americana como fez Buddy Rich, seu maior ídolo na bateria. Após chamar a atenção do reverenciado e impiedoso mestre do jazz Terence Fletcher (JK Simmons), Andrew entra para a orquestra principal do conservatório de Shaffer, a melhor escola de música dos Estados Unidos. Entretanto, a convivência com o abusivo maestro fará Andrew transformar seu sonho em obsessão, fazendo de tudo para chegar a um novo nível como músico, mesmo que isso coloque em risco seus relacionamentos com sua namorada e sua saúde física e mental.
+
+nome: O Rei do Show
+ano: 2015
+categoria: Drama, Musical
+sinopse: De origem humilde e desde a infância sonhando com um mundo mágico, P.T. Barnum (Hugh Jackman) desafia as barreiras sociais se casando com a filha do patrão do pai e dá o pontapé inicial na realização de seu maior desejo abrindo uma espécie de museu de curiosidades. O empreendimento fracassa, mas ele logo vislumbra uma ousada saída: produzir um grande show estrelado por freaks, fraudes, bizarrices e rejeitados de todos os tipos.
+
+nome: Logan
+ano: 2017
+categoria: Ação, Ficção científica
+sinopse: Em 2029, Logan (Hugh Jackman) ganha a vida como chofer de limousine para cuidar do nonagenário Charles Xavier (Patrick Stewart). Debilitado fisicamente e esgotado emocionalmente, ele é procurado por Gabriela (Elizabeth Rodriguez), uma mexicana que precisa da ajuda do ex-X-Men para defender a pequena Laura Kinney / X-23 (Dafne Keen). Ao mesmo tempo em que se recusa a voltar à ativa, Logan é perseguido pelo mercenário Donald Pierce (Boyd Holbrook), interessado na menina.
+
+nome: It - A Coisa
+ano: 2017
+categoria: Terror, Suspense
+sinopse: Um grupo de sete adolescentes de Derry, uma cidade no Maine, formam o auto-intitulado "Losers Club" - o clube dos perdedores. A pacata rotina da cidade é abalada quando crianças começam a desaparecer e tudo o que pode ser encontrado delas são partes de seus corpos. Logo, os integrantes do "Losers Club" acabam ficando face a face com o responsável pelos crimes: o palhaço Pennywise.
+
+nome: Pulp Fiction - Tempo de Violência
+ano: 1995
+categoria: Policial, Suspense
+sinopse: Vincent Vega (John Travolta) e Jules Winnfield (Samuel L. Jackson) são dois assassinos profissionais trabalham fazendo cobranças para Marsellus Wallace (Ving Rhames), um poderosos gângster. Vega é forçado a sair com a garota do chefe, temendo passar dos limites; enquanto isso, o pugilista Butch Coolidge (Bruce Willis) se mete em apuros por ganhar luta que deveria perder.
+
+nome: Drive
+ano: 2012
+categoria: Ação, Suspense
+sinopse: Durante o dia um motorista (Ryan Gosling) trabalha como mecânico e dublê em filmes de Hollywood, enquanto que à noite ele presta serviços para a máfia. Ele é vizinho de Irene (Carey Mulligan), que é casada e tem um filho com Standard (Oscar Isaac). Percebendo a situação difícil de Standard, que saiu há pouco tempo da prisão, o motorista o convida para realizar um assalto. Só que o golpe dá errado, o que coloca em risco as vidas do motorista, Irene e seu filho.
