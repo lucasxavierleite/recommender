@@ -74,9 +74,9 @@ struct grafo {
 *  Função para calcular pesos entre dois vértices do grafo (armazenado na aresta)
 *
 *  Parâmetros: 
-*    GRAFO *grafo  :  grafo em questão
-*    VERTICE v1  :  vértice v1
-*    VERTICE v2  :  vértice v2
+*    GRAFO *grafo :  grafo em questão
+*    VERTICE v1   :  vértice v1
+*    VERTICE v2   :  vértice v2
 *    DICIONARIO *stopwords  :  dicionario de stopwords 
 *
 *  Retorno:
@@ -179,15 +179,15 @@ void grafo_imprimir_vertice(GRAFO *grafo, VERTICE *vertice, int peso_base) {
 				if(p->proximo->pesos->media <= PESO_MINIMO) {
 					relevancia = p->proximo->pesos->media * 100;
 					filme_imprimir_lista(grafo->adj[p->proximo->vertice].filme);
-					printf(ANSI_COR_PRETO_BRILHANTE "  | %.2lf%% relevante\n", relevancia, ANSI_COR_RESET);
+					printf(ANSI_COR_PRETO_BRILHANTE "  | %.2lf%% relevante\n" ANSI_COR_RESET, relevancia);
 					p = p->proximo;
 					continue;
 				}
 			}
 
 			filme_imprimir_lista(grafo->adj[p->proximo->vertice].filme);
+			printf(ANSI_COR_PRETO_BRILHANTE "  | %.2lf%% relevante\n" ANSI_COR_RESET, relevancia);
 
-			printf(ANSI_COR_PRETO_BRILHANTE "  | %.2lf%% relevante\n", relevancia, ANSI_COR_RESET);
 			p = p->proximo;
 		}
 
@@ -200,10 +200,10 @@ void grafo_imprimir_vertice(GRAFO *grafo, VERTICE *vertice, int peso_base) {
 *
 *  Parâmetros: 
 *    GRAFO *grafo : grafo que representa o conjunto de filmes
-*    char *genero : gênero a ser considerado
+*    char *genero : gênero buscado
 */
 
-void grafo_imprimir_filmes_genero(GRAFO *grafo, char *genero) {
+void grafo_recomendar_filmes_genero(GRAFO *grafo, char *genero) {
 	printf("\n");
 
 	int encontrados = 0;
@@ -321,6 +321,35 @@ void grafo_recomendar(GRAFO *grafo, char *nome, int peso_base) {
 }
 
 /*
+*  Verifica a relação entre dois filmes
+*
+*  Parâmetros: 
+*    GRAFO *grafo  : grafo que representa o conjunto de filmes
+*    char *nome_f1 : nome do primeiro filme
+*    char *nome_f2 : nome do segundo filme
+*/
+
+void grafo_verificar_relacao(GRAFO *grafo, char *nome_f1, char *nome_f2) {
+	VERTICE *v1 = grafo_buscar_vertice(grafo, nome_f1);
+	VERTICE *v2 = grafo_buscar_vertice(grafo, nome_f2);
+
+	if(v1 && v2) {
+		ARESTA *p = v1->inicio;
+
+		while(p->proximo) {
+			if(grafo_comparar_vertice_nome(v2, &grafo->adj[p->proximo->vertice]) == 0) {
+				double relevancia = p->proximo->pesos->media * 100;
+				printf(ANSI_COR_PRETO_BRILHANTE "\nOs filmes são %.2lf%% similares\n\n" ANSI_COR_RESET, relevancia);
+				break;
+			}
+			p = p->proximo;
+		}
+	} else {
+		erro_filme_nao_encontrado();
+	}
+}
+
+/*
 *  Função para inicializar e fazer alocação dinâmica para um grafo
 *
 *  Parâmetros: 
@@ -394,7 +423,7 @@ void grafo_imprimir_filmes(GRAFO *grafo) {
 	printf("\n");
 
 	for(int i = 0; i < grafo->n_vertices; i++) {
-		printf(ANSI_COR_PRETO_BRILHANTE "%d. ", i + 1, ANSI_COR_RESET);
+		printf(ANSI_COR_PRETO_BRILHANTE "%d. " ANSI_COR_RESET, i + 1);
 		filme_imprimir_lista(grafo->adj[i].filme);
 		printf("\n");
 	}

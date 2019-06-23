@@ -10,19 +10,20 @@
 #define ANSI_COR_CIANO "\x1b[36m"
 #define ANSI_COR_RESET "\x1b[0m"
 
-#define MENU_LISTAR_FILMES '1'
-#define MENU_BUSCAR_FILME '2'
-#define MENU_RECOMENDAR_FILMES '3'
-#define MENU_RECOMENDAR_FILMES_SINOPSE '4'
-#define MENU_RECOMENDAR_FILMES_POR_GENERO '5'
-#define MENU_RECOMENDAR_FILMES_NAO_RELACIONADOS '6'
-#define MENU_VERIFICAR_RELACAO_FILMES '7'
-#define MENU_SAIR '8'
+#define MENU_LISTAR_FILMES 1
+#define MENU_BUSCAR_FILME 2
+#define MENU_RECOMENDAR_FILMES 3
+#define MENU_RECOMENDAR_FILMES_SINOPSE 4
+#define MENU_RECOMENDAR_FILMES_POR_GENERO 5
+#define MENU_RECOMENDAR_FILMES_NAO_RELACIONADOS 6
+#define MENU_VERIFICAR_RELACAO_FILMES 7
+#define MENU_SAIR 8
 
 void titulo();
 void menu_imprimir();
-void menu_ler_opcao(char *opcao);
+int menu_ler_opcao();
 void menu_ler_titulo(char *titulo);
+void menu_opcao_invalida();
 void mensagem_encerrar();
 void erro_filme_nao_encontrado();
 void erro_filme_sem_recomendacoes();

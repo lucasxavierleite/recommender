@@ -28,10 +28,10 @@ void titulo() {
 void menu_imprimir() {
 	printf(ANSI_COR_PRETO_BRILHANTE ANSI_COR_AZUL "1) Listar filmes\n");
 	printf("2) Buscar filme\n");
-	printf("3) Buscar filmes relacionados com base em todos os critérios\n");
-	printf("4) Buscar filmes relacionados com base na sinopse\n");
-	printf("5) Buscar filmes por gênero\n");
-	printf("6) Buscar filmes não relacionados\n");
+	printf("3) Recomendar filmes relacionados com base em todos os critérios\n");
+	printf("4) Recomendar filmes relacionados com base na sinopse\n");
+	printf("5) Recomendar filmes por gênero\n");
+	printf("6) Recomendar filmes não relacionados\n");
 	printf("7) Verificar relação entre dois filmes\n");
 	printf("8) Sair\n" ANSI_COR_RESET);
 }
@@ -39,14 +39,18 @@ void menu_imprimir() {
 /*
 *  Função que lê opção escolhida pelo usuário
 *
-*  Parâmetros:
-*    char *opcao  :  opção entrada pelo usuário
+*  Retorno:
+*    Opção entrada pelo usuário
 */
 
-void menu_ler_opcao(char *opcao) {
+int menu_ler_opcao() {
 	printf(ANSI_COR_PRETO_BRILHANTE "\n> " ANSI_COR_RESET);
-	*opcao = getchar();
+
+	char buffer[100];
+	scanf("%[^\n]", buffer);
 	getchar();
+
+	return buffer[0] - '0';
 }
 
 /*
@@ -57,14 +61,18 @@ void menu_ler_opcao(char *opcao) {
 */
 
 void menu_ler_titulo(char *titulo) {
-	printf(ANSI_COR_PRETO_BRILHANTE "\n> " ANSI_COR_RESET);
+	printf(ANSI_COR_PRETO_BRILHANTE "\n> Digite o título do filme: " ANSI_COR_RESET);
 	scanf("%[^\n]", titulo);
 	getchar();
 }
 
-/*
-*  Imprime na tela a mensagem de encerramento
-*/
+/* Imprime a mensagem de opção inválida */
+
+void menu_opcao_invalida() {
+	printf(ANSI_COR_PRETO_BRILHANTE ANSI_COR_VERMELHA "\n> Opção inválida\n\n" ANSI_COR_RESET);
+}
+
+/* Imprime na tela a mensagem de encerramento */
 
 void mensagem_encerrar() {
 	printf(ANSI_COR_PRETO_BRILHANTE "\n> Até\n" ANSI_COR_RESET);

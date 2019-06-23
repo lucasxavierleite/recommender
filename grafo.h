@@ -19,6 +19,7 @@ void grafo_liberar(GRAFO *grafo);
 void grafo_imprimir_filmes(GRAFO *grafo);
 void grafo_buscar(GRAFO *grafo, char *nome);
 void grafo_recomendar(GRAFO *grafo, char *nome, int peso_base);
-void grafo_imprimir_filmes_genero	(GRAFO* grafo, char* genero);
+void grafo_recomendar_filmes_genero(GRAFO *grafo, char *genero);
+void grafo_verificar_relacao(GRAFO *grafo, char *nome_f1, char *nome_f2);
 
 #endif

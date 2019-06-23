@@ -261,7 +261,7 @@ void filme_imprimir(FILME *filme) {
 	}
 
 	printf("\n");
-	printf("sinopse: %s", filme->sinopse, ANSI_COR_RESET);
+	printf("sinopse: %s" ANSI_COR_RESET, filme->sinopse);
 }
 
 /*
@@ -280,5 +280,5 @@ void filme_imprimir_lista(FILME *filme) {
 			printf(", ");
 	}
 
-	printf(ANSI_COR_RESET "");
+	printf(ANSI_COR_RESET);
 }

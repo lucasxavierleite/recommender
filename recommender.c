@@ -18,36 +18,48 @@ int main(int argc, char *argv[]) {
 
 	titulo();
 
-	char opcao;
-	char nome_filme[255];
+	int opcao;
+	char nome_filme_1[255];
+	char nome_filme_2[255];
 
 	while(opcao != MENU_SAIR) {
 		menu_imprimir();
-		menu_ler_opcao(&opcao);
+		opcao = menu_ler_opcao(&opcao);
 
 		switch(opcao) {
 			case MENU_LISTAR_FILMES:
 				grafo_imprimir_filmes(grafo);
 				break;
 			case MENU_BUSCAR_FILME:
-				menu_ler_titulo(nome_filme);
-				grafo_buscar(grafo, nome_filme);
+				menu_ler_titulo(nome_filme_1);
+				grafo_buscar(grafo, nome_filme_1);
 				break;
 			case MENU_RECOMENDAR_FILMES:
-				menu_ler_titulo(nome_filme);
-				grafo_recomendar(grafo, nome_filme, RECOMENDACAO_GERAL);
+				menu_ler_titulo(nome_filme_1);
+				grafo_recomendar(grafo, nome_filme_1, RECOMENDACAO_GERAL);
 				break;
 			case MENU_RECOMENDAR_FILMES_SINOPSE:
-				menu_ler_titulo(nome_filme);
-				grafo_recomendar(grafo, nome_filme, RECOMENDACAO_SINOPSE);
+				menu_ler_titulo(nome_filme_1);
+				grafo_recomendar(grafo, nome_filme_1, RECOMENDACAO_SINOPSE);
 				break;
 			case MENU_RECOMENDAR_FILMES_POR_GENERO:
-				menu_ler_titulo(nome_filme);
-				grafo_imprimir_filmes_genero(grafo, nome_filme);
+				menu_ler_titulo(nome_filme_1);
+				grafo_recomendar_filmes_genero(grafo, nome_filme_1);
 				break;
 			case MENU_RECOMENDAR_FILMES_NAO_RELACIONADOS:
-				menu_ler_titulo(nome_filme);
-				grafo_recomendar(grafo, nome_filme, RECOMENDACAO_NAO_RELACIONADOS);
+				menu_ler_titulo(nome_filme_1);
+				grafo_recomendar(grafo, nome_filme_1, RECOMENDACAO_NAO_RELACIONADOS);
+				break;
+			case MENU_VERIFICAR_RELACAO_FILMES:
+				menu_ler_titulo(nome_filme_1);
+				menu_ler_titulo(nome_filme_2);
+				grafo_verificar_relacao(grafo, nome_filme_1, nome_filme_2);
+				break;
+			case MENU_SAIR:
+				continue;
+				break;
+			default:
+				menu_opcao_invalida();
 				break;
 		}
 	}
