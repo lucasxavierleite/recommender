@@ -16,6 +16,8 @@ int main(int argc, char *argv[]) {
 	GRAFO *grafo = grafo_criar(arquivo);
 	fclose(arquivo);
 
+	titulo();
+
 	char opcao;
 	char nome_filme[255];
 

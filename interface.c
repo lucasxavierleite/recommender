@@ -1,6 +1,26 @@
 #include <stdio.h>
 #include "interface.h"
 
+/* Imprime o título do programa e a mensagem do boas-vindas */
+
+void titulo() {
+	const char *titulo[80];
+	titulo[0] = " _____                                                   _";
+	titulo[1] = "|  __ \\                                                 | |";
+	titulo[2] = "| |__) |___  ___ ___  _ __ ___  _ __ ___   ___ _ __   __| | ___ _ __";
+	titulo[3] = "|  _  // _ \\/ __/ _ \\| '_ ` _ \\| '_ ` _ \\ / _ \\ '_ \\ / _` |/ _ \\ '__|";
+	titulo[4] = "| | \\ \\  __/ (_| (_) | | | | | | | | | | |  __/ | | | (_| |  __/ |   ";
+	titulo[5] = "|_|  \\_\\___|\\___\\___/|_| |_| |_|_| |_| |_|\\___|_| |_|\\__,_|\\___|_|";
+
+	printf(ANSI_COR_PRETO_BRILHANTE ANSI_COR_MAGENTA);
+
+	for(int i = 0; i < 6; i++)
+		printf("%s\n", titulo[i]);
+
+	printf("\n" ANSI_COR_RESET);
+	printf(ANSI_COR_PRETO_BRILHANTE "\n> Bem-vindo ao Recommender\n\n" ANSI_COR_RESET);
+}
+
 /*
 *  Função que imprime na tela um menu para interação do usuário
 */
@@ -24,6 +44,7 @@ void menu_imprimir() {
 */
 
 void menu_ler_opcao(char *opcao) {
+	printf(ANSI_COR_PRETO_BRILHANTE "\n> " ANSI_COR_RESET);
 	*opcao = getchar();
 	getchar();
 }
